@@ -1,0 +1,79 @@
+{
+  "name": "worksequence",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@types/crypto-js": "^4.2.2",
+    "@types/nprogress": "^0.2.3",
+    "@vueuse/core": "^13.1.0",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "axios": "^1.9.0",
+    "browser-image-compression": "^2.0.2",
+    "cos-js-sdk-v5": "^1.10.1",
+    "countup.js": "^2.8.0",
+    "crypto-js": "^4.2.0",
+    "dingtalk-jsapi": "^3.1.4",
+    "echarts": "^5.5.0",
+    "echarts-wordcloud": "^2.1.0",
+    "element-plus": "^2.9.3",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
+    "md-editor-v3": "^2.11.2",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.3.1",
+    "qrcode.vue": "^3.6.0",
+    "vconsole": "^3.15.1",
+    "vue": "^3.5.13",
+    "vue-cropper": "1.1.1",
+    "vue-echarts": "^6.6.9",
+    "vue-router": "^4.5.0",
+    "vue-schart": "^2.0.0",
+    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.1.0",
+    "@tsconfig/node22": "^22.0.0",
+    "@types/fabric": "^5.3.10",
+    "@types/file-saver": "^2.0.7",
+    "@types/merge-images": "^1.2.4",
+    "@types/node": "^22.10.7",
+    "@unocss/preset-uno": "^65.4.3",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.19.0",
+    "npm-run-all2": "^7.0.2",
+    "postcss": "^8.5.1",
+    "sass-embedded": "^1.83.4",
+    "typescript": "~5.7.3",
+    "unocss": "^65.4.3",
+    "unplugin-auto-import": "^19.0.0",
+    "unplugin-vue-components": "^28.0.0",
+    "vite": "^6.0.11",
+    "vite-plugin-node-polyfills": "^0.24.0",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vite-plugin-vue-devtools": "^7.7.0",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue-tsc": "^2.2.0",
+    "workbox-webpack-plugin": "^7.3.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "core-js"
+    ],
+    "onlyBuiltDependencies": [
+      "canvas"
+    ]
+  }
+}
