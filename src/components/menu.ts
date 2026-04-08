@@ -69,6 +69,12 @@ export const menuData: Menus[] = [
             index: '/category',
             title: '检查项目',
           },
+          {
+            id: '293',
+            pid: '30',
+            index: '/targetTasks',
+            title: '流程目的',
+          },
         ],
       },
     ],

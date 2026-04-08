@@ -181,3 +181,20 @@ export function getSequence(pid: number) {
     method: 'get',
   })
 }
+
+export function getAllIcons() {
+  return requestWorkBase({
+    url: `/getAllIcons`,
+    method: 'get',
+  })
+}
+
+export function createTypeIcon(config: any) {
+  return requestWorkBase({
+    url: `/createTypeIcon`,
+    method: 'post',
+    data: {
+      ...config,
+    },
+  })
+}

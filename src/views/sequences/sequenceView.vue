@@ -3,30 +3,108 @@ import { getSequence } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import sequenceCreate from './items/sequenceCreate.vue'
 import timeSelect from './items/timeSelect.vue'
+import { targetList } from './target'
 
+interface sequence {
+  name: string
+  floor: {
+    id: number
+    name: string
+  }
+  target: number[]
+  posit: {
+    id: number
+    name: string
+  }
+  objs: {
+    id: number
+    name: string
+    type: string
+  }[]
+  start: string
+  end: string
+  start_num: number
+  end_num: number
+  ins: {
+    choices: string[]
+    items: { id: number, c_type: string }[]
+  }
+  tools_accuracy: boolean
+  tools: { id: number, name: string, sp: string }[]
+  emp_accuracy: boolean
+  emp: { id: number, name: string } []
+}
 const acs = useAppCacheStore()
-const currentTime = ref<number>(480)
+const timeRange = ref([-1, -1])
+const currentTime = ref<number>(timeRange.value[0])
 const creatSequenceDialog = ref(false)
+const sequenceList = ref<sequence[]>([])
+const currentSequenceList = ref<sequence[]>([])
+const timeSelectRefresh = ref(0)
+function timeToMinutes(timeStr: string): number {
+  const [hours, minutes] = timeStr.split(':').map(Number)
+  return hours * 60 + minutes
+}
+
+let timer: ReturnType<typeof setTimeout> | null = null
+function receiveCurrentTimeChange(value: number) {
+  currentTime.value = value
+  if (timer) {
+    clearTimeout(timer)
+  }
+
+  timer = setTimeout(() => {
+    currentSequenceList.value = sequenceList.value.filter(item => item.start_num <= value && item.end_num > value)
+  }, 500)
+}
+
 function init() {
+  timeRange.value = [-1, -1]
   getSequence(acs.currentProject).then(({ data: res }) => {
-    console.log(res)
+    const temp: sequence[] = []
+    for (const i in res.result) {
+      temp.push(res.result[i])
+      temp[temp.length - 1].start_num = timeToMinutes(res.result[i].start)
+      temp[temp.length - 1].end_num = timeToMinutes(res.result[i].end)
+      if (timeRange.value[0] === -1) {
+        timeRange.value[0] = temp[temp.length - 1].start_num
+      }
+      if (timeRange.value[1] === -1) {
+        timeRange.value[1] = temp[temp.length - 1].end_num
+      }
+      if (temp[temp.length - 1].start_num <= timeRange.value[0]) {
+        timeRange.value[0] = temp[temp.length - 1].start_num
+      }
+      if (temp[temp.length - 1].end_num >= timeRange.value[1]) {
+        timeRange.value[1] = temp[temp.length - 1].end_num
+      }
+    }
+    console.log('时间区间', timeRange.value)
+    sequenceList.value = temp
+    receiveCurrentTimeChange(currentTime.value)
+    timeSelectRefresh.value = new Date().getTime()
   })
 }
+
 onMounted(() => {
+  init()
+})
+
+watch(() => acs.currentProject, () => {
   init()
 })
 </script>
 
 <template>
   <div>
-    <div>
-      <timeSelect @current-time="(value) => currentTime = value" />
+    <div v-if="timeRange[0] > 0 && timeRange[1] > 0">
+      <timeSelect :key="timeSelectRefresh" :start="timeRange[0]" :end="timeRange[1]" @current-time="receiveCurrentTimeChange" />
     </div>
     <div class="mt-2">
       <el-card class="rounded-xl cursor-pointer" @click="creatSequenceDialog = true">
         <div class="flex gap-2">
           <div>
-            创建流程{{ currentTime }}
+            创建流程
           </div>
           <div>
             <el-icon size="25">
@@ -35,6 +113,96 @@ onMounted(() => {
           </div>
         </div>
       </el-card>
+      <div class="flex gap-1 mt-2 max-w-100% overflow-auto">
+        <TransitionGroup name="slide-fade">
+          <div v-for="(item, index) in currentSequenceList" :key="`${item.name}_${index}`" class="flex w-80">
+            <el-card class="rounded-xl w-80">
+              <div class="flex mt-1">
+                <div class="w-20">
+                  <el-text type="primary">
+                    流程名称：
+                  </el-text>
+                </div>
+                <div class="w-59 max-h-20 overflow-auto">
+                  <el-text>
+                    {{ item.name }}
+                  </el-text>
+                </div>
+              </div>
+              <div class="flex mt-1">
+                <div class="w-20">
+                  <el-text type="warning">
+                    楼层：
+                  </el-text>
+                </div>
+                <div>
+                  <el-text>
+                    {{ item.floor.name }}
+                  </el-text>
+                </div>
+              </div>
+              <div class="flex mt-1">
+                <div class="w-20">
+                  <el-text type="danger">
+                    位置：
+                  </el-text>
+                </div>
+                <div>
+                  <el-text>
+                    {{ item.posit.name }}
+                  </el-text>
+                </div>
+              </div>
+              <div class="flex mt-1">
+                <div class="w-20">
+                  <el-text type="danger">
+                    时间：
+                  </el-text>
+                </div>
+                <div>
+                  <el-text>
+                    {{ item.start }}至{{ item.end }}
+                  </el-text>
+                </div>
+              </div>
+              <div class="flex mt-1">
+                <div class="w-20">
+                  <el-text type="success">
+                    任务：
+                  </el-text>
+                </div>
+                <div class="flex gap-2 w-59">
+                  <el-tag v-for="(target, nums) in targetList(item.target)" :key="nums" type="success">
+                    {{ target.name }}
+                  </el-tag>
+                </div>
+              </div>
+              <div class="flex mt-1">
+                <div class="w-20">
+                  <el-text type="warning">
+                    工具：
+                  </el-text>
+                </div>
+                <div class="flex gap-2 w-59 flex-wrap">
+                  <el-tag v-for="(tool, tool_index) in item.tools" :key="tool_index" type="warning">
+                    {{ tool.name }}
+                  </el-tag>
+                </div>
+              </div>
+              <div class=" mt-1">
+                <el-text type="primary">
+                  流程对象：
+                </el-text>
+                <div class="max-h-50 overflow-auto">
+                  <el-tag v-for="(o, i) in item.objs" :key="i" class="m-1">
+                    {{ o.name }}
+                  </el-tag>
+                </div>
+              </div>
+            </el-card>
+          </div>
+        </TransitionGroup>
+      </div>
     </div>
     <XtDialog v-model="creatSequenceDialog" title="添加流程节点" :show-cancel="false" :show-confirm="false" @cancel="creatSequenceDialog = false">
       <sequenceCreate
@@ -47,5 +215,21 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.slide-fade-enter-active {
+  transition: all 0.5s ease-out;
+}
 
+.slide-fade-leave-active {
+  transition: all 0.5s ease-in;
+}
+
+.slide-fade-enter-from {
+  transform: translateX(-30px);
+  opacity: 0;
+}
+
+.slide-fade-leave-to {
+  transform: translateX(30px);
+  opacity: 0;
+}
 </style>

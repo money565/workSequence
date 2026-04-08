@@ -96,7 +96,7 @@ const routes: RouteRecordRaw[] = [
           title: '图标',
           permiss: '5',
         },
-        component: () => import(/* webpackChunkName: "icon" */ '../views/pages/icon.vue'),
+        component: () => import(/* webpackChunkName: "icon" */ '../views/iconView/iconView.vue'),
       },
       {
         path: '/ucenter',
@@ -114,6 +114,15 @@ const routes: RouteRecordRaw[] = [
           permiss: '291',
         },
         component: () => import(/* webpackChunkName: "editor" */ '../views/sequences/toolsEditor.vue'),
+      },
+      {
+        path: '/targetTasks',
+        name: 'targetTasks',
+        meta: {
+          title: '流程目的',
+          permiss: '293',
+        },
+        component: () => import(/* webpackChunkName: "editor" */ '../views/sequences/targetTasks.vue'),
       },
       {
         path: '/category',

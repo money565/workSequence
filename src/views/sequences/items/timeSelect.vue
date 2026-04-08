@@ -2,11 +2,16 @@
 import type { CSSProperties } from 'vue'
 import { shallowReactive } from 'vue'
 
+interface IProp {
+  start: number
+  end: number
+}
 interface Mark {
   style: CSSProperties
   label: string
 }
 type Marks = Record<string, Mark | string>
+const props = defineProps<IProp>()
 const emits = defineEmits(['currentTime'])
 const baseHourColor = ['#030510', '#050718', '#080b24', '#0b102f', '#0e153a', '#121943', '#2a386b', '#586dac', '#87ceeb', '#b1e1ff', '#d0ecff', '#e4f5ff', '#fff8e1', '#fff8e1', '#fff1c4', '#feecaf', '#fae19b', '#f7d08b', '#f4bf8e', '#f19e84', '#ee7d78', '#dd5868', '#6d275f', '#25113e']
 const currentTime = ref(480)
@@ -40,7 +45,7 @@ const moonPos = computed(() => {
     const angle = Math.PI * t
     return {
       x: 50 - 45 * Math.cos(angle),
-      y: 30 - 22 * Math.sin(angle),
+      y: 27 - 22 * Math.sin(angle),
     }
   }
   if (h >= 17 && h <= 24) {
@@ -48,7 +53,7 @@ const moonPos = computed(() => {
     const angle = Math.PI * t
     return {
       x: 50 - 45 * Math.cos(angle),
-      y: 30 - 22 * Math.sin(angle),
+      y: 27 - 22 * Math.sin(angle),
     }
   }
   return { x: 50, y: 80 }
@@ -93,11 +98,12 @@ function mixColor(c1: string, c2: string, t: number) {
 }
 
 const marks2 = shallowReactive<Marks>({})
-for (let i = 0; i < 1440; i++) {
+for (let i = (props.start) < 0 ? 0 : (props.start); i <= props.end; i++) {
   if (i % 60 === 0) {
     marks2[String(i)] = `${i / 60}:00`
   }
 }
+marks2[String(props.start)] = `${Math.floor(props.start / 60).toString().padStart(2, '0')}:${(props.start % 60).toString().padStart(2, '0')}`
 </script>
 
 <template>
@@ -146,7 +152,7 @@ for (let i = 0; i < 1440; i++) {
 
     <!-- 滑块 -->
     <div class="demo" :style="{ '--stop-color': oppositeColor }">
-      <el-slider v-model="currentTime" :marks="marks2" :step="1" :max="1439" class="w-full" @input="emits('currentTime', currentTime)" />
+      <el-slider v-model="currentTime" :marks="marks2" :step="1" :max="props.end" :min="props.start" class="w-full" @input="emits('currentTime', currentTime)" />
     </div>
   </div>
 </template>

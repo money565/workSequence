@@ -2,6 +2,7 @@
 import type { FormInstance, FormRules } from 'element-plus'
 import { createSequence, getCurrentTools, getEmpByProject, getFloor, getInspectionItemsGroup, getObjsWithPosit, getPositWithFloor } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
+import { flattenTree, task_target } from '../target'
 
 interface formOpt {
   name: string
@@ -15,6 +16,7 @@ interface formOpt {
   tools: number[]
   emp_accuracy: boolean
   emp: number[]
+  target: number[]
 }
 interface IProp {
   start: string
@@ -42,6 +44,7 @@ const form = reactive<formOpt>({
   tools: [],
   emp_accuracy: false, // 人员不用精确
   emp: [],
+  target: [],
 })
 
 function init() {
@@ -137,6 +140,7 @@ function reset() {
   form.tools = []
   form.emp_accuracy = false// 人员不用精确
   form.emp = []
+  form.target = []
   floorList.value = []
   positLit.value = []
   objstLit.value = []
@@ -266,6 +270,11 @@ onMounted(() => {
       <el-form-item label="流程名称：" prop="name">
         <el-input v-model="form.name" placeholder="请输入流程名称" />
       </el-form-item>
+      <el-form-item label="流程目的：" prop="name">
+        <el-checkbox-group v-model="form.target">
+          <el-checkbox v-for="(item, index) in flattenTree(task_target)" :key="index" :label="item.name" :value="item.id" />
+        </el-checkbox-group>
+      </el-form-item>
       <el-form-item label="楼层：" prop="floor">
         <el-select v-model="form.floor" placeholder="请选择楼层" @change="getPositList">
           <el-option
@@ -289,12 +298,12 @@ onMounted(() => {
       <el-form-item prop="objs">
         <template #label>
           <div class="flex justify-center items-center max-h-100">
-            <div>
+            <div class="mb-5">
               <div>
                 流程对象：
               </div>
               <div v-if="objstLit.length > 0">
-                <el-button @click="selectAllObject">
+                <el-button type="primary" link @click="selectAllObject">
                   全选
                 </el-button>
               </div>
@@ -313,7 +322,7 @@ onMounted(() => {
           该位置下没有流程对象
         </div>
       </el-form-item>
-      <el-form-item label="流程时间：" required>
+      <el-form-item label="流程时间：" required class="mt-10">
         <div class="h-12 overflow-auto flex gap-2">
           <el-col :span="10">
             <el-form-item prop="start">

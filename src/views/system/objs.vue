@@ -103,7 +103,7 @@ watch(() => acs.currentProject, () => { init() })
                           <el-image :src="`https://xcwy-contract-1312050651.cos.ap-chengdu.myqcloud.com/${obj.type}.svg`" style="width: 2.5rem; height: 2.5rem" />
                         </div>
                         <div class="flex items-center justify-center">
-                          {{ obj.name }}
+                          <el-text>{{ obj.name }}</el-text>
                         </div>
                         <div class="flex items-center justify-center">
                           <el-button type="danger" link @click="confirmDeletObject(obj_index)">
