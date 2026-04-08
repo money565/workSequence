@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules, TreeNode } from 'element-plus'
 import { createSequence, getCurrentTools, getEmpByProject, getFloor, getInspectionItemsGroup, getObjsWithPosit, getPositWithFloor } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import { flattenTree, task_target } from '../target'
+import targetSelect from './targetSelect.vue'
 
 interface formOpt {
   name: string
@@ -252,6 +253,18 @@ function handleStartChange() {
   }
 }
 
+function selectedTarget(value: any) {
+  const index = form.target.findIndex(item => item === value.id)
+  console.log('找到index', index)
+  if (index === -1) {
+    form.target.push(value.id)
+  }
+  else {
+    form.target.splice(index, 1)
+  }
+  console.log(form.target)
+}
+
 onMounted(() => {
   console.log(props.start)
   init()
@@ -271,9 +284,9 @@ onMounted(() => {
         <el-input v-model="form.name" placeholder="请输入流程名称" />
       </el-form-item>
       <el-form-item label="流程目的：" prop="name">
-        <el-checkbox-group v-model="form.target">
-          <el-checkbox v-for="(item, index) in flattenTree(task_target)" :key="index" :label="item.name" :value="item.id" />
-        </el-checkbox-group>
+        <div class="max-h-100 overflow-auto w-100%">
+          <targetSelect @selected="selectedTarget" />
+        </div>
       </el-form-item>
       <el-form-item label="楼层：" prop="floor">
         <el-select v-model="form.floor" placeholder="请选择楼层" @change="getPositList">

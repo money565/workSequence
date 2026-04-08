@@ -198,3 +198,48 @@ export function createTypeIcon(config: any) {
     },
   })
 }
+
+export function getActionTargets() {
+  return requestWorkBase({
+    url: `/getActionTargets`,
+    method: 'get',
+  })
+}
+
+export function createActionTarget(config: any) {
+  return requestWorkBase({
+    url: `/createActionTarget`,
+    method: 'post',
+    data: {
+      ...config,
+    },
+  })
+}
+
+export function deleteActionTarget(t_id: number) {
+  return requestWorkBase({
+    url: `/deleteActionTarget/${t_id}`,
+    method: 'get',
+  })
+}
+
+export function getActionTargetsWithOutTypes() {
+  return requestWorkBase({
+    url: `/getActionTargetsWithOutTypes`,
+    method: 'get',
+  })
+}
+
+export function deleteSequenceBySid(s_id: number) {
+  return requestWorkBase({
+    url: `/deleteSequenceBySid/${s_id}`,
+    method: 'get',
+  })
+}
+
+export function deactivateSequenceBySid(s_id: number) {
+  return requestWorkBase({
+    url: `/deactivateSequenceBySid/${s_id}`,
+    method: 'get',
+  })
+}

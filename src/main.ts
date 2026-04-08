@@ -9,6 +9,7 @@ import { permissDirective } from './utils/permiss'
 import '@/assets/styles/index.scss'
 import 'virtual:uno.css'
 import 'virtual:svg-icons-register'
+import '../src/assets/css/scrollbar.css'
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
