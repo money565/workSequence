@@ -62,31 +62,22 @@ const routes: RouteRecordRaw[] = [
         component: () => import(/* webpackChunkName: "table" */ '../views/system/job.vue'),
       },
       {
-        path: '/table-editor',
-        name: 'table-editor',
+        path: '/check',
+        name: 'check',
         meta: {
-          title: '可编辑表格',
-          permiss: '32',
-        },
-        component: () => import(/* webpackChunkName: "table-editor" */ '../views/table/table-editor.vue'),
-      },
-      {
-        path: '/schart',
-        name: 'schart',
-        meta: {
-          title: 'schart图表',
+          title: '历史检查',
           permiss: '41',
         },
-        component: () => import(/* webpackChunkName: "schart" */ '../views/chart/schart.vue'),
+        component: () => import(/* webpackChunkName: "schart" */ '../views/checkDatas/checkHistory.vue'),
       },
       {
-        path: '/echarts',
-        name: 'echarts',
+        path: '/handle',
+        name: 'handle',
         meta: {
-          title: 'echarts图表',
+          title: '问题处理',
           permiss: '42',
         },
-        component: () => import(/* webpackChunkName: "echarts" */ '../views/chart/echarts.vue'),
+        component: () => import(/* webpackChunkName: "echarts" */ '../views/checkDatas/problemHandling.vue'),
       },
 
       {
@@ -134,24 +125,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import(/* webpackChunkName: "markdown" */ '../views/sequences/categoryView.vue'),
       },
       {
-        path: '/export',
-        name: 'export',
-        meta: {
-          title: '导出Excel',
-          permiss: '34',
-        },
-        component: () => import(/* webpackChunkName: "export" */ '../views/table/export.vue'),
-      },
-      {
-        path: '/import',
-        name: 'import',
-        meta: {
-          title: '导入Excel',
-          permiss: '33',
-        },
-        component: () => import(/* webpackChunkName: "import" */ '../views/table/import.vue'),
-      },
-      {
         path: '/theme',
         name: 'theme',
         meta: {
@@ -161,51 +134,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import(/* webpackChunkName: "theme" */ '../views/pages/theme.vue'),
       },
       {
-        path: '/calendar',
-        name: 'calendar',
-        meta: {
-          title: '日历',
-          permiss: '24',
-        },
-        component: () => import(/* webpackChunkName: "calendar" */ '../views/element/calendar.vue'),
-      },
-      {
-        path: '/watermark',
-        name: 'watermark',
-        meta: {
-          title: '水印',
-          permiss: '25',
-        },
-        component: () => import(/* webpackChunkName: "watermark" */ '../views/element/watermark.vue'),
-      },
-      {
-        path: '/carousel',
-        name: 'carousel',
-        meta: {
-          title: '走马灯',
-          permiss: '23',
-        },
-        component: () => import(/* webpackChunkName: "carousel" */ '../views/element/carousel.vue'),
-      },
-      {
-        path: '/tour',
-        name: 'tour',
-        meta: {
-          title: '分步引导',
-          permiss: '26',
-        },
-        component: () => import(/* webpackChunkName: "tour" */ '../views/element/tour.vue'),
-      },
-      {
-        path: '/steps',
-        name: 'steps',
-        meta: {
-          title: '步骤条',
-          permiss: '27',
-        },
-        component: () => import(/* webpackChunkName: "steps" */ '../views/element/steps.vue'),
-      },
-      {
         path: '/sequence',
         name: 'sequence',
         meta: {
@@ -213,24 +141,6 @@ const routes: RouteRecordRaw[] = [
           permiss: '21',
         },
         component: () => import(/* webpackChunkName: "form" */ '../views/sequences/sequenceView.vue'),
-      },
-      {
-        path: '/upload',
-        name: 'upload',
-        meta: {
-          title: '上传',
-          permiss: '22',
-        },
-        component: () => import(/* webpackChunkName: "upload" */ '../views/element/upload.vue'),
-      },
-      {
-        path: '/statistic',
-        name: 'statistic',
-        meta: {
-          title: '统计',
-          permiss: '28',
-        },
-        component: () => import(/* webpackChunkName: "statistic" */ '../views/element/statistic.vue'),
       },
     ],
   },

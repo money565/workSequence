@@ -1,13 +1,13 @@
-<script setup lang="ts" name="dashboard">
+<script setup lang="ts">
 
 </script>
 
 <template>
   <div>
-    首页
+    检查数据
   </div>
 </template>
 
-<style>
+<style scoped>
 
 </style>
