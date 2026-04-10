@@ -7,7 +7,14 @@ export interface TASK_OPT {
   errMesg?: string
 }
 
-export function flattenTree(tree: any[], childrenKey = 'children') {
+export interface TASK_OPT_OBJ_EXT extends TASK_OPT {
+  objs: {
+    id: number
+    name: string
+  }[]
+}
+
+export function flattenTree(tree: any[], childrenKey = 'children'): TASK_OPT[] {
   let result: any[] = []
   tree.forEach((node) => {
     result.push(node)

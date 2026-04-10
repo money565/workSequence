@@ -200,7 +200,7 @@ watch(() => acs.currentProject, () => {
                       任务：
                     </el-text>
                   </div>
-                  <div class="flex gap-2 w-59">
+                  <div class="flex flex-wrap gap-2 w-59 overflow-auto">
                     <el-tag v-for="(target, nums) in item.target" :key="nums" type="success">
                       {{ target.name }}
                     </el-tag>

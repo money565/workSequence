@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ElTree } from 'element-plus'
 import type { TASK_OPT } from '../sequences/target'
 
 interface IProps {
@@ -7,23 +8,21 @@ interface IProps {
 }
 const props = defineProps<IProps>()
 const emits = defineEmits(['selected'])
-const selected = ref<number[]>([])
-
-function selectedTarget(value: any) {
-  const index = selected.value.findIndex(item => item === value.id)
-  if (index === -1) {
-    selected.value.push(value.id)
+const treeRef = ref<InstanceType<typeof ElTree>>()
+function selectedTarget() {
+  const selected = treeRef.value?.getCheckedNodes() || []
+  const id_list = []
+  for (const i in selected) {
+    id_list.push(selected[i].id)
   }
-  else {
-    selected.value.splice(index, 1)
-  }
-  emits('selected', selected.value)
+  emits('selected', id_list)
 }
 </script>
 
 <template>
   <div>
     <el-tree
+      ref="treeRef"
       :data="props.resList"
       :default-expand-all="props.expand"
       node-key="id"
@@ -32,7 +31,7 @@ function selectedTarget(value: any) {
     >
       <template #default="{ data }">
         <div v-if="data.id !== undefined" class="flex gap-2">
-          <div class="flex items-center justify-start w-10 mt-4">
+          <div v-if="data.icon" class="flex items-center justify-start w-10 mt-4">
             <el-image :src="`https://xcwy-contract-1312050651.cos.ap-chengdu.myqcloud.com/${data.icon}.svg`" style="width:1rem" />
           </div>
           <div class="flex items-center justify-start w-10">

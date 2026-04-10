@@ -12,5 +12,5 @@ export interface PLANT {
   tools: ITEM[]
   cycle: number
   ex_date: number
-  ins: string
+  ins: ITEM[]
 }

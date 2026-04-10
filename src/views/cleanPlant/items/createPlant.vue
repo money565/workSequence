@@ -1,22 +1,31 @@
 <script setup lang="ts">
 import type { TASK_OPT } from '@/views/sequences/target'
-import type { PLANT } from './plant_interface'
-import { getActionTargetsWithOutTypes, getObjectsTreeTypes, getToolsTree } from '@/axios/interfaceWorkBase'
+import { createPlant, getActionTargetsWithOutTypes, getInspectionItems, getObjectsTreeTypes, getToolsTree } from '@/axios/interfaceWorkBase'
 import treeView from '@/views/public/treeView.vue'
 
+interface PLANT_CREATE {
+  name: string
+  types: number[]
+  action: number[]
+  tools: number[]
+  cycle: number
+  ex_date: number
+  ins: number[]
+}
 const emits = defineEmits(['confirm', 'cancel'])
-const form = reactive<PLANT>({
+const form = reactive<PLANT_CREATE>({
   name: '',
   types: [],
   action: [],
   tools: [],
   cycle: 0,
   ex_date: 1,
-  ins: '',
+  ins: [],
 })
 const objsTree = ref<TASK_OPT[]>([])
 const taskTargets = ref<TASK_OPT[]>([])
 const tools = ref<TASK_OPT[]>([])
+const insList = ref<TASK_OPT[]>([])
 function init() {
   getObjectsTreeTypes().then(({ data: res }) => {
     objsTree.value = res.result
@@ -27,10 +36,15 @@ function init() {
   getToolsTree().then(({ data: res }) => {
     tools.value = res.result
   })
+  getInspectionItems().then(({ data: res }) => {
+    insList.value = res.result
+  })
 }
 
 function onSubmit() {
-  emits('confirm')
+  createPlant(form).then(() => {
+    emits('confirm')
+  })
 }
 
 onMounted(() => {
@@ -84,17 +98,22 @@ onMounted(() => {
       </el-form-item>
       <el-form-item label="流程对象类型">
         <div class="w-60">
-          <treeView :res-list="objsTree" :expand="false" />
+          <treeView :res-list="objsTree" :expand="false" @selected="(value) => form.types = value" />
         </div>
       </el-form-item>
       <el-form-item label="流程目的">
         <div class="w-60">
-          <treeView :res-list="taskTargets" :expand="false" />
+          <treeView :res-list="taskTargets" :expand="false" @selected="(value) => form.action = value" />
         </div>
       </el-form-item>
       <el-form-item label="工具">
         <div class="w-60">
-          <treeView :res-list="tools" :expand="false" />
+          <treeView :res-list="tools" :expand="false" @selected="(value) => form.tools = value" />
+        </div>
+      </el-form-item>
+      <el-form-item label="检查内容">
+        <div class="w-60">
+          <treeView :res-list="insList" :expand="false" @selected="(value) => form.ins = value" />
         </div>
       </el-form-item>
       <el-form-item>

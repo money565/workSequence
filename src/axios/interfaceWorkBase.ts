@@ -151,13 +151,6 @@ export function getObjsWithPosit(pos_id: number) {
   })
 }
 
-export function getInspectionItemsGroup() {
-  return requestWorkBase({
-    url: `/getInspectionItemsGroup`,
-    method: 'get',
-  })
-}
-
 export function getEmpByProject(pid: number) {
   return requestWorkBase({
     url: `/getEmpByProject/${pid}`,
@@ -300,5 +293,15 @@ export function getInspectionItemsWithTypes() {
   return requestWorkBase({
     url: `/getInspectionItemsWithTypes`,
     method: 'get',
+  })
+}
+
+export function createPlant(config: any) {
+  return requestWorkBase({
+    url: `/createPlant`,
+    method: 'post',
+    data: {
+      ...config,
+    },
   })
 }

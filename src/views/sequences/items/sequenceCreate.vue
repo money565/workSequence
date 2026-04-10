@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import type { TASK_OPT } from '../target'
-import { createSequence, getEmpByProject, getFloor, getInspectionItemsGroup, getObjsWithPosit, getPositWithFloor, getToolsTree } from '@/axios/interfaceWorkBase'
+import type { TASK_OPT, TASK_OPT_OBJ_EXT } from '../target'
+import { createSequence, getEmpByProject, getFloor, getInspectionItems, getObjsWithPosit, getPositWithFloor, getToolsTree } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import treeView from '@/views/public/treeView.vue'
 import targetSelect from './targetSelect.vue'
@@ -13,27 +13,24 @@ interface formOpt {
   objs: number[]
   start: string
   end: string
-  ins: string
+  ins: number[]
   tools_accuracy: boolean
   tools: number[]
   emp_accuracy: boolean
   emp: number[]
   target: number[]
 }
-interface IProp {
-  start: string
-}
-const props = defineProps<IProp>()
+
 const emits = defineEmits(['cancel', 'confirm'])
 const acs = useAppCacheStore()
 const floorList = ref<{ name: string, id: number }[]>([])
 const positLit = ref<{ name: string, id: number }[]>([])
-const objstLit = ref<{ name: string, id: number, type: string }[]>([])
-const inspectionItems = ref<{ label: string, value: string, ins: number[] }[]>([])
-const insChoices = ref<{ [key: number]: string }>({})
+const objstLit = ref<TASK_OPT_OBJ_EXT[]>([])
+const inspectionItems = ref<TASK_OPT[]>([])
 const toolsList = ref<TASK_OPT[]>([])
 const empList = ref<{ id: number, name: string }[]>([])
 const ruleFormRef = ref<FormInstance>()
+const sequenceType = ref(1)
 const form = reactive<formOpt>({
   name: '',
   floor: undefined,
@@ -41,7 +38,7 @@ const form = reactive<formOpt>({
   objs: [],
   start: '',
   end: '',
-  ins: '',
+  ins: [],
   tools_accuracy: false,
   tools: [],
   emp_accuracy: false, // 人员不用精确
@@ -53,21 +50,8 @@ function init() {
   getFloor(acs.currentProject).then(({ data: res }) => {
     floorList.value = res.result
   })
-  getInspectionItemsGroup().then(({ data: res }) => {
-    console.log('检查列表', res)
-    const temp = []
-    for (const i in res.result) {
-      temp.push({
-        label: res.result[i].name,
-        value: i,
-        ins: res.result[i].types,
-      })
-    }
-    inspectionItems.value = temp
-    for (const j in res.choices) {
-      insChoices.value[res.choices[j][0]] = res.choices[j][1]
-    }
-    console.log(insChoices.value)
+  getInspectionItems().then(({ data: res }) => {
+    inspectionItems.value = res.result
   })
 }
 function getTools() {
@@ -103,30 +87,9 @@ function getObjsList() {
   objstLit.value = []
   if (form.posit !== undefined) {
     getObjsWithPosit(form.posit).then(({ data: res }) => {
+      console.log('对象信息', res)
       objstLit.value = res.result
     })
-  }
-}
-
-function makeInsTips() {
-  let index = -1
-  let tips = ''
-  for (const i in inspectionItems.value) {
-    if (inspectionItems.value[i].value === form.ins) {
-      index = Number(i)
-    }
-  }
-  if (index !== -1) {
-    for (const j in inspectionItems.value[index].ins) {
-      tips = `${tips + insChoices.value[inspectionItems.value[index].ins[j]]}、`
-    }
-  }
-  return tips
-}
-
-function selectAllObject() {
-  for (const o in objstLit.value) {
-    form.objs.push(objstLit.value[o].id)
   }
 }
 
@@ -137,7 +100,7 @@ function reset() {
   form.objs = []
   form.start = ''
   form.end = ''
-  form.ins = ''
+  form.ins = []
   form.tools_accuracy = false
   form.tools = []
   form.emp_accuracy = false// 人员不用精确
@@ -147,7 +110,6 @@ function reset() {
   positLit.value = []
   objstLit.value = []
   inspectionItems.value = []
-  insChoices.value = []
   toolsList.value = []
   empList.value = []
 }
@@ -250,7 +212,6 @@ const rules = reactive<FormRules<formOpt>>({
 })
 
 function handleStartChange() {
-  console.log(form)
   if (ruleFormRef.value) {
     ruleFormRef.value.validateField('end')
   }
@@ -260,8 +221,17 @@ function selectedTarget(value: number[]) {
   form.target = value
 }
 
+function getObjectSelected(value: number[] | string[]) {
+  const temp: number[] = []
+  for (const v in value) {
+    if (typeof value[v] !== 'number') {
+      temp.push(Number(String(value[v]).replace('o_', '')))
+    }
+  }
+  form.objs = temp
+}
+
 onMounted(() => {
-  console.log(props.start)
   init()
 })
 </script>
@@ -275,6 +245,18 @@ onMounted(() => {
       style="max-width: 600px"
       :rules="rules"
     >
+      <el-form-item label="流程类型：">
+        <el-radio-group v-model="sequenceType">
+          <!-- works when >=2.6.0, recommended ✔️ not work when <2.6.0 ❌ -->
+          <el-radio :value="1">
+            日常流程
+          </el-radio>
+          <!-- works when <2.6.0, deprecated act as value when >=3.0.0 -->
+          <el-radio :value="2">
+            计划清洁
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="流程名称：" prop="name">
         <el-input v-model="form.name" placeholder="请输入流程名称" />
       </el-form-item>
@@ -303,25 +285,9 @@ onMounted(() => {
           />
         </el-select>
       </el-form-item>
-      <el-form-item prop="objs">
-        <template #label>
-          <div class="flex justify-center items-center max-h-100">
-            <div class="mb-5">
-              <div>
-                流程对象：
-              </div>
-              <div v-if="objstLit.length > 0">
-                <el-button type="primary" link @click="selectAllObject">
-                  全选
-                </el-button>
-              </div>
-            </div>
-          </div>
-        </template>
-        <div v-if="objstLit.length > 0" class="max-h-50 overflow-auto">
-          <el-checkbox-group v-model="form.objs">
-            <el-checkbox v-for="(item, index) in objstLit" :key="index" :label="item.name" :value="item.id" />
-          </el-checkbox-group>
+      <el-form-item label="流程对象：" prop="objs">
+        <div v-if="objstLit.length > 0" class="w-100%">
+          <treeView :expand="false" :res-list="objstLit" @selected="getObjectSelected" />
         </div>
         <div v-else-if="form.posit === undefined">
           请先选择位置
@@ -362,24 +328,10 @@ onMounted(() => {
       </el-form-item>
       <el-form-item label="检查模板：" prop="ins">
         <div>
-          <div class="max-h-50 overflow-auto">
-            <el-select v-model="form.ins" placeholder="选择检查模板" style="width: 240px" @change="makeInsTips">
-              <el-option
-                v-for="item in inspectionItems"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
-          <div>
-            <el-text type="info">
-              {{ makeInsTips() }}
-            </el-text>
-          </div>
+          <treeView :expand="false" :res-list="inspectionItems" @selected="(value) => form.ins = value" />
         </div>
       </el-form-item>
-      <el-form-item v-if="inspectionItems.find(item => item.value === form.ins)?.ins?.includes(1)" label="工具：">
+      <el-form-item label="工具：">
         <div class="flex flex-col">
           <div>
             <el-radio-group v-model="form.tools_accuracy" @change="getTools">
@@ -399,7 +351,7 @@ onMounted(() => {
           </div>
         </div>
       </el-form-item>
-      <el-form-item v-if="inspectionItems.find(item => item.value === form.ins)?.ins?.includes(4)" label="人员：">
+      <el-form-item label="人员：">
         <el-radio-group v-model="form.emp_accuracy" @change="getEmps">
           <el-radio :value="true">
             精确到人
