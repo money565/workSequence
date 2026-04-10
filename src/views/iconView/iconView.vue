@@ -12,13 +12,16 @@ interface ICON_OPT {
 const objs_icons = ref<ICON_OPT[]>([])
 const tools_icons = ref<ICON_OPT[]>([])
 const action_icons = ref<ICON_OPT[]>([])
+const ins_icons=ref<ICON_OPT[]>([])
 const createToolsIconDialog = ref(false)
 const createObjsIconDialog = ref(false)
 const createActionIconDialog = ref(false)
+const createInsIconDialog = ref(false)
 const showBlock = reactive({
   objs: false,
   tools: false,
   action: false,
+  ins:false
 })
 const types = reactive({
   name: '',
@@ -30,6 +33,7 @@ function init() {
     const objs_temp: ICON_OPT[] = []
     const tools_temp: ICON_OPT[] = []
     const action_temp: ICON_OPT[] = []
+    const ins_temp: ICON_OPT[] = []
     for (const i in res.result) {
       if (res.result[i].category === 1) {
         objs_temp.push(res.result[i])
@@ -40,10 +44,15 @@ function init() {
       if (res.result[i].category === 3) {
         action_temp.push(res.result[i])
       }
+      if (res.result[i].category === 4) {
+        ins_temp.push(res.result[i])
+      }
+      
     }
     objs_icons.value = objs_temp
     tools_icons.value = tools_temp
     action_icons.value = action_temp
+    ins_icons.value = ins_temp
   })
 }
 
@@ -79,6 +88,7 @@ function upLoadType() {
     createObjsIconDialog.value = false
     createToolsIconDialog.value = false
     createActionIconDialog.value = false
+    createInsIconDialog.value = false
     init()
   })
 }
@@ -181,6 +191,37 @@ onMounted(() => {
         </el-collapse-transition>
       </div>
     </div>
+    <div>
+      <div>
+        <el-divider content-position="center" class="cursor-pointer h-4" @click="showBlock.ins = !showBlock.ins">
+          巡场检查类
+        </el-divider>
+        <el-collapse-transition>
+          <div v-show="showBlock.ins" class="flex flex-wrap gap-2 w-100% overflow-auto">
+            <div v-for="(item, index) in ins_icons" :key="index">
+              <el-card class="w-30 h-35 rounded-xl">
+                <div class=" flex items-center justify-center">
+                  <el-image :src="`https://xcwy-contract-1312050651.cos.ap-chengdu.myqcloud.com/${item.icon}.svg`" style="width: 4rem; height: 4rem;" />
+                </div>
+                <div class=" flex items-center justify-center mt-2">
+                  {{ item.name }}
+                </div>
+              </el-card>
+            </div>
+            <el-card class="w-30 h-35 rounded-xl cursor-pointer" @click="types.name = '', types.icon = '', types.category = 4, createInsIconDialog = true">
+              <div class="flex items-center justify-center">
+                <el-icon size="35">
+                  <svg-icon name="add-green" />
+                </el-icon>
+              </div>
+              <div class="flex items-center justify-center">
+                添加巡场检查类型
+              </div>
+            </el-card>
+          </div>
+        </el-collapse-transition>
+      </div>
+    </div>
     <xt-dialog v-model="createObjsIconDialog" title="创建流程对象类型" @cancel="createObjsIconDialog = false" @confirm="upLoadType">
       <div>
         <el-form>
@@ -222,6 +263,21 @@ onMounted(() => {
           </el-form-item>
           <el-form-item label="类型：">
             动作
+          </el-form-item>
+        </el-form>
+      </div>
+    </xt-dialog>
+    <xt-dialog v-model="createInsIconDialog" title="创建巡场检查类型" @cancel="createInsIconDialog = false" @confirm="upLoadType">
+      <div>
+        <el-form>
+          <el-form-item label="名称：">
+            <el-input v-model="types.name" />
+          </el-form-item>
+          <el-form-item label="图标：">
+            <upLoadIcon @up-load="(key) => { types.icon = key }" />
+          </el-form-item>
+          <el-form-item label="类型：">
+            巡场检查
           </el-form-item>
         </el-form>
       </div>

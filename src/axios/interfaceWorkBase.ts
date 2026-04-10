@@ -243,3 +243,62 @@ export function deactivateSequenceBySid(s_id: number) {
     method: 'get',
   })
 }
+
+export function getSequenceByTime(p_id: number, start: number) {
+  return requestWorkBase({
+    url: `/getSequenceByTime/${p_id}/${start}`,
+    method: 'get',
+  })
+}
+
+export function getPlant(pid: number) {
+  return requestWorkBase({
+    url: `/getPlant/${pid}`,
+    method: 'get',
+  })
+}
+
+export function getObjectsTreeTypes() {
+  return requestWorkBase({
+    url: `/getObjectsTreeTypes`,
+    method: 'get',
+  })
+}
+
+export function getToolsTree() {
+  return requestWorkBase({
+    url: `/getToolsTree`,
+    method: 'get',
+  })
+}
+
+export function getToolsTreeWithTypes() {
+  return requestWorkBase({
+    url: `/getToolsTreeWithTypes`,
+    method: 'get',
+  })
+}
+
+export function treeChange(config: any) {
+  return requestWorkBase({
+    url: `/treeChange`,
+    method: 'post',
+    data: {
+      ...config,
+    },
+  })
+}
+
+export function getObjectTypesTree() {
+  return requestWorkBase({
+    url: `/getObjectTypesTree`,
+    method: 'get',
+  })
+}
+
+export function getInspectionItemsWithTypes() {
+  return requestWorkBase({
+    url: `/getInspectionItemsWithTypes`,
+    method: 'get',
+  })
+}

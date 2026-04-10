@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createInspection, getInspectionChoices } from '@/axios/interfaceWorkBase'
+import { createInspection, getInspectionItemsWithTypes } from '@/axios/interfaceWorkBase'
 
 const emits = defineEmits(['cancel', 'confirm'])
 
@@ -10,7 +10,7 @@ const form = reactive({
 
 const checkOpts = ref()
 function init() {
-  getInspectionChoices().then(({ data: res }) => {
+  getInspectionItemsWithTypes().then(({ data: res }) => {
     checkOpts.value = res.result
   })
 }

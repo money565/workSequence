@@ -107,6 +107,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import(/* webpackChunkName: "editor" */ '../views/sequences/toolsEditor.vue'),
       },
       {
+        path: '/objsType',
+        name: 'objsType',
+        meta: {
+          title: '对象类型',
+          permiss: '291',
+        },
+        component: () => import(/* webpackChunkName: "editor" */ '../views/sequences/objsTypeView.vue'),
+      },
+      {
         path: '/targetTasks',
         name: 'targetTasks',
         meta: {
@@ -141,6 +150,37 @@ const routes: RouteRecordRaw[] = [
           permiss: '21',
         },
         component: () => import(/* webpackChunkName: "form" */ '../views/sequences/sequenceView.vue'),
+      },
+      {
+        path: '/plant',
+        name: 'plant',
+        meta: {
+          title: '计划管理',
+          permiss: '21',
+        },
+        component: () => import(/* webpackChunkName: "form" */ '../views/cleanPlant/cleanPlant.vue'),
+      },
+    ],
+  },
+  {
+    path: '/mobileHome',
+    name: 'mobileHome',
+    meta: {
+      title: '手机端',
+      noAuth: false,
+    },
+    component: () => import(/* webpackChunkName: "login" */ '../views/mobile/index.vue'),
+    children: [
+      {
+        // 关键步骤：设置一个 path 为空字符串的子路由
+        path: '',
+        // 重定向到你想默认展示的子页面路径（相对路径）
+        redirect: 'home',
+      },
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import(/* webpackChunkName: "login" */ '../views/mobile/home/homeView.vue'),
       },
     ],
   },

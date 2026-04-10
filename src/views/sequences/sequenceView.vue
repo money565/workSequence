@@ -1,41 +1,11 @@
 <script setup lang="ts">
+import type { sequence } from './target'
 import { deactivateSequenceBySid, deleteSequenceBySid, getSequence } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import sequenceCreate from './items/sequenceCreate.vue'
 import timeSelect from './items/timeSelect.vue'
-import { targetList } from './target'
 
-interface sequence {
-  id: number
-  name: string
-  floor: {
-    id: number
-    name: string
-  }
-  target: number[]
-  posit: {
-    id: number
-    name: string
-  }
-  objs: {
-    id: number
-    name: string
-    type: string
-  }[]
-  start: string
-  end: string
-  start_num: number
-  end_num: number
-  ins: {
-    choices: string[]
-    items: { id: number, c_type: string }[]
-  }
-  tools_accuracy: boolean
-  tools: { id: number, name: string, sp: string }[]
-  emp_accuracy: boolean
-  emp: { id: number, name: string } []
-}
 const acs = useAppCacheStore()
 const timeRange = ref([-1, -1])
 const currentTime = ref<number>(timeRange.value[0])
@@ -231,7 +201,7 @@ watch(() => acs.currentProject, () => {
                     </el-text>
                   </div>
                   <div class="flex gap-2 w-59">
-                    <el-tag v-for="(target, nums) in targetList(item.target)" :key="nums" type="success">
+                    <el-tag v-for="(target, nums) in item.target" :key="nums" type="success">
                       {{ target.name }}
                     </el-tag>
                   </div>

@@ -1,0 +1,83 @@
+<script setup lang="ts">
+// ==================== 1. 监听键盘左右方向键 ← → ====================
+import { onMounted, onUnmounted, ref } from 'vue'
+
+import topItem from './topItem/topItem.vue'
+
+// 监听区域（也可以直接挂 window）
+const swipeRef = ref<HTMLElement | null>(null)
+
+// 滑动记录
+let startX = 0
+const minDistance = 50 // 最小滑动距离
+
+// 触摸开始
+function onTouchStart(e: Event) {
+  const touchEvent = e as TouchEvent
+  startX = touchEvent.touches[0].clientX
+}
+
+// 触摸结束（方向已修正）
+function onTouchEnd(e: Event) {
+  const touchEvent = e as TouchEvent
+  const endX = touchEvent.changedTouches[0].clientX
+  const offset = endX - startX
+
+  if (offset > minDistance) {
+    // 手指 右滑 → 代表上一页 / 向左翻
+    console.log('👉 右滑 → 执行【上一页/向左】')
+    toLeft()
+  }
+  else if (offset < -minDistance) {
+    // 手指 左滑 → 代表下一页 / 向右翻
+    console.log('👈 左滑 → 执行【下一页/向右】')
+    toRight()
+  }
+}
+
+// 键盘方向键（正常逻辑）
+function onKeyDown(e: KeyboardEvent) {
+  if (e.key === 'ArrowLeft') {
+    console.log('⌨ ← 左箭头 → 向左')
+    toLeft()
+  }
+  else if (e.key === 'ArrowRight') {
+    console.log('⌨ → 右箭头 → 向右')
+    toRight()
+  }
+}
+
+// 业务方法
+function toLeft() {
+  // 左一页 / 上一张
+}
+function toRight() {
+  // 右一页 / 下一张
+}
+
+// 绑定事件
+onMounted(() => {
+  const el = swipeRef.value ?? window
+  el.addEventListener('touchstart', onTouchStart)
+  el.addEventListener('touchend', onTouchEnd)
+  window.addEventListener('keydown', onKeyDown)
+})
+
+onUnmounted(() => {
+  const el = swipeRef.value ?? window
+  el.removeEventListener('touchstart', onTouchStart)
+  el.removeEventListener('touchend', onTouchEnd)
+  window.removeEventListener('keydown', onKeyDown)
+})
+</script>
+
+<template>
+  <div>
+    <topItem />
+    <router-view />
+  </div>
+</template>
+
+<style scoped>
+
+</style>

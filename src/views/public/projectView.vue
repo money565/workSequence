@@ -2,8 +2,16 @@
 import { getProjectList } from '@/axios/interface'
 import { useAppCacheStore } from '@/stores/appCache'
 
+const props = defineProps<{ width: number }>()
+const width = computed(() => {
+  if (props.width === undefined) {
+    return 10
+  }
+  else {
+    return props.width
+  }
+})
 const acs = useAppCacheStore()
-
 onMounted(() => {
   if (acs.projectList.length === 0) {
     getProjectList().then(({ data: res }) => {
@@ -22,8 +30,7 @@ onMounted(() => {
       v-model="acs.currentProject"
       placeholder="选择项目"
       size="default"
-      style="width: 240px"
-      class="mt-2 mr-2"
+      :style="{ width: `${width}rem` }"
     >
       <el-option
         v-for="item in acs.projectList"

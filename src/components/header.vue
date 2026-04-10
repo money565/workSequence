@@ -65,8 +65,8 @@ function setFullScreen() {
     </div>
     <div class="header-right">
       <div class="flex items-center justify-center h-5 gap-7">
-        <div class="mb-2">
-          <projectView />
+        <div>
+          <projectView :width="15" />
         </div>
         <div @click="router.push('/theme')">
           <el-icon size="30">

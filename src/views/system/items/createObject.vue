@@ -9,6 +9,7 @@ interface formOpt {
   name: string
   num: number
   type: number
+  feq: number
 }
 const props = defineProps<IProps>()
 const emits = defineEmits(['cancel', 'confirm'])
@@ -17,6 +18,7 @@ const form = reactive<formOpt>({
   name: '',
   num: 0,
   type: -1,
+  feq: 1,
 })
 const iconList = ref<{ id: number, name: string, icon: string }[]>([])
 function init() {
@@ -76,6 +78,19 @@ onMounted(() => {
       </el-form-item>
       <el-form-item label="数量：">
         <el-input-number v-model="form.num" placeholder="请输入数量" />
+      </el-form-item>
+      <el-form-item label="维护周期：">
+        <el-radio-group v-model="form.feq">
+          <el-radio :value="1">
+            日常
+          </el-radio>
+          <el-radio :value="2">
+            计划
+          </el-radio>
+          <el-radio :value="3">
+            日常+计划
+          </el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="类型：">
         <div class="flex flex-wrap">

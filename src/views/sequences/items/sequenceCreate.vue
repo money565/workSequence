@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { FormInstance, FormRules, TreeNode } from 'element-plus'
-import { createSequence, getCurrentTools, getEmpByProject, getFloor, getInspectionItemsGroup, getObjsWithPosit, getPositWithFloor } from '@/axios/interfaceWorkBase'
+import type { FormInstance, FormRules } from 'element-plus'
+import type { TASK_OPT } from '../target'
+import { createSequence, getEmpByProject, getFloor, getInspectionItemsGroup, getObjsWithPosit, getPositWithFloor, getToolsTree } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
-import { flattenTree, task_target } from '../target'
+import treeView from '@/views/public/treeView.vue'
 import targetSelect from './targetSelect.vue'
 
 interface formOpt {
@@ -30,7 +31,7 @@ const positLit = ref<{ name: string, id: number }[]>([])
 const objstLit = ref<{ name: string, id: number, type: string }[]>([])
 const inspectionItems = ref<{ label: string, value: string, ins: number[] }[]>([])
 const insChoices = ref<{ [key: number]: string }>({})
-const toolsList = ref<{ id: number, name: string, specification: string, type: string }[]>([])
+const toolsList = ref<TASK_OPT[]>([])
 const empList = ref<{ id: number, name: string }[]>([])
 const ruleFormRef = ref<FormInstance>()
 const form = reactive<formOpt>({
@@ -38,7 +39,7 @@ const form = reactive<formOpt>({
   floor: undefined,
   posit: undefined,
   objs: [],
-  start: props.start,
+  start: '',
   end: '',
   ins: '',
   tools_accuracy: false,
@@ -71,7 +72,7 @@ function init() {
 }
 function getTools() {
   if (form.tools_accuracy === true) {
-    getCurrentTools().then(({ data: res }) => {
+    getToolsTree().then(({ data: res }) => {
       toolsList.value = res.result
     })
   }
@@ -157,6 +158,7 @@ async function submitForm(formEl: FormInstance | undefined) {
   await formEl.validate((valid, fields) => {
     if (valid) {
       createSequence(form).then(() => {
+        console.log(form)
         emits('confirm')
       })
     }
@@ -248,21 +250,14 @@ const rules = reactive<FormRules<formOpt>>({
 })
 
 function handleStartChange() {
+  console.log(form)
   if (ruleFormRef.value) {
     ruleFormRef.value.validateField('end')
   }
 }
 
-function selectedTarget(value: any) {
-  const index = form.target.findIndex(item => item === value.id)
-  console.log('找到index', index)
-  if (index === -1) {
-    form.target.push(value.id)
-  }
-  else {
-    form.target.splice(index, 1)
-  }
-  console.log(form.target)
+function selectedTarget(value: number[]) {
+  form.target = value
 }
 
 onMounted(() => {
@@ -385,19 +380,24 @@ onMounted(() => {
         </div>
       </el-form-item>
       <el-form-item v-if="inspectionItems.find(item => item.value === form.ins)?.ins?.includes(1)" label="工具：">
-        <el-radio-group v-model="form.tools_accuracy" @change="getTools">
-          <el-radio :value="true">
-            精确到工具
-          </el-radio>
-          <el-radio :value="false">
-            模糊
-          </el-radio>
-        </el-radio-group>
-        <el-form-item v-if="toolsList.length > 0 && form.tools_accuracy" prop="tools">
-          <el-checkbox-group v-model="form.tools">
-            <el-checkbox v-for="(item, index) in toolsList" :key="index" :label="item.name" :value="item.id" />
-          </el-checkbox-group>
-        </el-form-item>
+        <div class="flex flex-col">
+          <div>
+            <el-radio-group v-model="form.tools_accuracy" @change="getTools">
+              <el-radio :value="true">
+                精确到工具
+              </el-radio>
+              <el-radio :value="false">
+                模糊
+              </el-radio>
+            </el-radio-group>
+          </div>
+
+          <div>
+            <el-form-item v-if="toolsList.length > 0 && form.tools_accuracy" prop="tools">
+              <treeView :res-list="toolsList" :expand="false" @selected="(value) => form.tools = value" />
+            </el-form-item>
+          </div>
+        </div>
       </el-form-item>
       <el-form-item v-if="inspectionItems.find(item => item.value === form.ins)?.ins?.includes(4)" label="人员：">
         <el-radio-group v-model="form.emp_accuracy" @change="getEmps">
