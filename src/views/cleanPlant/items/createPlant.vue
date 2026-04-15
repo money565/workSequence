@@ -3,6 +3,10 @@ import type { TASK_OPT } from '@/views/sequences/target'
 import { createPlant, getActionTargetsWithOutTypes, getInspectionItems, getObjectsTreeTypes, getToolsTree } from '@/axios/interfaceWorkBase'
 import treeView from '@/views/public/treeView.vue'
 
+interface IProps {
+  kindId: number
+  kindName: string
+}
 interface PLANT_CREATE {
   name: string
   types: number[]
@@ -11,7 +15,9 @@ interface PLANT_CREATE {
   cycle: number
   ex_date: number
   ins: number[]
+  parent: number
 }
+const props = defineProps<IProps>()
 const emits = defineEmits(['confirm', 'cancel'])
 const form = reactive<PLANT_CREATE>({
   name: '',
@@ -21,6 +27,7 @@ const form = reactive<PLANT_CREATE>({
   cycle: 0,
   ex_date: 1,
   ins: [],
+  parent: props.kindId,
 })
 const objsTree = ref<TASK_OPT[]>([])
 const taskTargets = ref<TASK_OPT[]>([])
@@ -55,6 +62,9 @@ onMounted(() => {
 <template>
   <div class="max-h-170 overflow-auto">
     <el-form :model="form" label-width="auto" style="max-width: 900px">
+      <el-form-item label="计划类别">
+        <text>{{ props.kindName }}</text>
+      </el-form-item>
       <el-form-item label="计划名称">
         <el-input v-model="form.name" placeholder="请输入计划名称" />
       </el-form-item>

@@ -54,8 +54,22 @@ export const menuData: Menus[] = [
       {
         id: '22',
         pid: '4',
-        index: '/plant',
+        index: '2-1-1',
         title: '计划管理',
+        children: [
+          {
+            id: '291',
+            pid: '29',
+            index: '/plant',
+            title: '制定计划',
+          },
+          {
+            id: '292',
+            pid: '29',
+            index: '/kindOfplant',
+            title: '计划分类',
+          },
+        ],
       },
       {
         id: '29',
@@ -64,25 +78,25 @@ export const menuData: Menus[] = [
         title: '工具和项目',
         children: [
           {
-            id: '291',
+            id: '294',
             pid: '29',
             index: '/toolsEditor',
             title: '工具编辑',
           },
           {
-            id: '293',
+            id: '295',
             pid: '30',
             index: '/targetTasks',
             title: '流程目的',
           },
           {
-            id: '294',
+            id: '296',
             pid: '30',
             index: '/objsType',
             title: '对象类型',
           },
           {
-            id: '292',
+            id: '297',
             pid: '29',
             index: '/category',
             title: '检查项目',
@@ -130,12 +144,6 @@ export const menuData: Menus[] = [
     index: '6',
     title: '附加页面',
     children: [
-      {
-        id: '61',
-        pid: '6',
-        index: '/ucenter',
-        title: '个人中心',
-      },
       {
         id: '62',
         pid: '6',

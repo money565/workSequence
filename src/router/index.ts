@@ -62,6 +62,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import(/* webpackChunkName: "table" */ '../views/system/job.vue'),
       },
       {
+        path: '/kindOfplant',
+        name: 'kindOfplant',
+        meta: {
+          title: '计划分类',
+          permiss: '31',
+        },
+        component: () => import(/* webpackChunkName: "table" */ '../views/cleanPlant/kindOfplant.vue'),
+      },
+
+      {
         path: '/check',
         name: 'check',
         meta: {
@@ -88,14 +98,6 @@ const routes: RouteRecordRaw[] = [
           permiss: '5',
         },
         component: () => import(/* webpackChunkName: "icon" */ '../views/iconView/iconView.vue'),
-      },
-      {
-        path: '/ucenter',
-        name: 'ucenter',
-        meta: {
-          title: '个人中心',
-        },
-        component: () => import(/* webpackChunkName: "ucenter" */ '../views/pages/ucenter.vue'),
       },
       {
         path: '/toolsEditor',

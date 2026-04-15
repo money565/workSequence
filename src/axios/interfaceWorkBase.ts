@@ -244,13 +244,6 @@ export function getSequenceByTime(p_id: number, start: number) {
   })
 }
 
-export function getPlant(pid: number) {
-  return requestWorkBase({
-    url: `/getPlant/${pid}`,
-    method: 'get',
-  })
-}
-
 export function getObjectsTreeTypes() {
   return requestWorkBase({
     url: `/getObjectsTreeTypes`,
@@ -299,6 +292,68 @@ export function getInspectionItemsWithTypes() {
 export function createPlant(config: any) {
   return requestWorkBase({
     url: `/createPlant`,
+    method: 'post',
+    data: {
+      ...config,
+    },
+  })
+}
+
+export function getPlantKinds() {
+  return requestWorkBase({
+    url: `/getPlantKinds`,
+    method: 'get',
+  })
+}
+
+export function createPlantKinds(config: any) {
+  return requestWorkBase({
+    url: `/createPlantKinds`,
+    method: 'post',
+    data: {
+      ...config,
+    },
+  })
+}
+
+export function getPlantByKind(kid: number) {
+  return requestWorkBase({
+    url: `/getPlantByKind/${kid}`,
+    method: 'get',
+  })
+}
+
+export function deletePlant(kid: number) {
+  return requestWorkBase({
+    url: `/deletePlant/${kid}`,
+    method: 'get',
+  })
+}
+
+export function pausePlant(kid: number) {
+  return requestWorkBase({
+    url: `/pausePlant/${kid}`,
+    method: 'get',
+  })
+}
+
+export function getPlantTree() {
+  return requestWorkBase({
+    url: `/getPlantTree`,
+    method: 'get',
+  })
+}
+
+export function getSequenceObjToolsTarget(pl_id: number, sid: number) {
+  return requestWorkBase({
+    url: `/getSequenceObjToolsTarget/${pl_id}/${sid}`,
+    method: 'get',
+  })
+}
+
+export function searchManager(config: any) {
+  return requestWorkBase({
+    url: `/searchManager`,
     method: 'post',
     data: {
       ...config,

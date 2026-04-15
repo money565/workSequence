@@ -38,7 +38,7 @@ onMounted(() => {
   <!-- 移动端渐变顶部栏 -->
   <div
     class="fixed top-0 left-0 right-0 h-12 px-4 z-999
-           flex items-center justify-between
+           flex items-center justify-between bg-blue-500
            bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"
   >
     <!-- 左侧标题 -->
@@ -48,16 +48,16 @@ onMounted(() => {
 
     <!-- 右侧：日期 + 用户菜单 -->
     <div class="flex items-center gap-3">
-      <div class="text-xs text-white/90 whitespace-nowrap">
+      <div class="text-4 text-white/90 whitespace-nowrap">
         {{ currentDate }}
       </div>
 
       <el-dropdown trigger="click" @command="handleCommand">
         <div class="flex items-center gap-1 px-1 py-2 cursor-pointer text-white">
-          <el-icon class="text-base">
+          <el-icon class="text-base" size="22">
             <User />
           </el-icon>
-          <el-icon class="text-xs text-white/80 ml-0.5">
+          <el-icon class="text-xl text-white/80 ml-0.5">
             <ArrowDown />
           </el-icon>
         </div>
@@ -65,10 +65,10 @@ onMounted(() => {
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="profile">
-              个人中心
+              已检查内容
             </el-dropdown-item>
             <el-dropdown-item command="settings">
-              账号设置
+              问题回看
             </el-dropdown-item>
             <el-dropdown-item divided command="logout">
               退出登录

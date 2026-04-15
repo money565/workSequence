@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import type { PLANT } from '@/views/cleanPlant/items/plant_interface'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { TASK_OPT, TASK_OPT_OBJ_EXT } from '../target'
-import { createSequence, getEmpByProject, getFloor, getInspectionItems, getObjsWithPosit, getPositWithFloor, getToolsTree } from '@/axios/interfaceWorkBase'
+import { createSequence, getEmpByProject, getFloor, getInspectionItems, getObjsWithPosit, getPlantTree, getPositWithFloor, getToolsTree } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import treeView from '@/views/public/treeView.vue'
 import targetSelect from './targetSelect.vue'
 
 interface formOpt {
   name: string
+  plant: boolean | undefined
+  plantList: number[]
   floor: number | undefined
   posit: number | undefined
   objs: number[]
@@ -30,9 +33,16 @@ const inspectionItems = ref<TASK_OPT[]>([])
 const toolsList = ref<TASK_OPT[]>([])
 const empList = ref<{ id: number, name: string }[]>([])
 const ruleFormRef = ref<FormInstance>()
-const sequenceType = ref(1)
+const plantList = ref<PLANT[]>([])
+const plantTreeRef = ref()
+const defaultProps = {
+  children: 'children',
+  label: 'name',
+}
 const form = reactive<formOpt>({
   name: '',
+  plant: undefined,
+  plantList: [],
   floor: undefined,
   posit: undefined,
   objs: [],
@@ -95,6 +105,7 @@ function getObjsList() {
 
 function reset() {
   form.name = ''
+  form.plant = undefined
   form.floor = undefined
   form.posit = undefined
   form.objs = []
@@ -106,6 +117,7 @@ function reset() {
   form.emp_accuracy = false// 人员不用精确
   form.emp = []
   form.target = []
+  form.plantList = []
   floorList.value = []
   positLit.value = []
   objstLit.value = []
@@ -142,6 +154,16 @@ const rules = reactive<FormRules<formOpt>>({
       trigger: 'change',
     },
   ],
+  plant: [{
+    required: true,
+    message: '选择流程类型',
+    trigger: 'change',
+  }],
+  plantList: [{
+    required: true,
+    message: '选择计划',
+    trigger: 'change',
+  }],
   posit: [
     {
       required: true,
@@ -149,6 +171,16 @@ const rules = reactive<FormRules<formOpt>>({
       trigger: 'change',
     },
   ],
+
+  target: [
+    {
+      type: 'array',
+      required: true,
+      message: '至少选择一个任务',
+      trigger: 'change',
+    },
+  ],
+
   objs: [
     {
       type: 'array',
@@ -160,14 +192,14 @@ const rules = reactive<FormRules<formOpt>>({
   start: [
     {
       required: true,
-      message: 'Please pick a date',
+      message: '选择开始时间',
       trigger: 'change',
     },
   ],
   end: [
     {
       required: true,
-      message: 'Please pick a time',
+      message: '选择结束时间',
       trigger: 'change',
     },
     {
@@ -217,10 +249,6 @@ function handleStartChange() {
   }
 }
 
-function selectedTarget(value: number[]) {
-  form.target = value
-}
-
 function getObjectSelected(value: number[] | string[]) {
   const temp: number[] = []
   for (const v in value) {
@@ -229,6 +257,28 @@ function getObjectSelected(value: number[] | string[]) {
     }
   }
   form.objs = temp
+}
+
+function selectedPlant() {
+  const selected = plantTreeRef.value?.getCheckedNodes() || []
+  const id_list = []
+  for (const i in selected) {
+    id_list.push(selected[i].id)
+  }
+  form.plantList = id_list
+}
+
+function getTargetSelect(value: number[]) {
+  form.target = value
+}
+
+function plantKindChange() {
+  if (form.plant) {
+    getPlantTree().then(({ data: res }) => {
+      plantList.value = res.result
+      console.log(plantList.value)
+    })
+  }
 }
 
 onMounted(() => {
@@ -245,14 +295,14 @@ onMounted(() => {
       style="max-width: 600px"
       :rules="rules"
     >
-      <el-form-item label="流程类型：">
-        <el-radio-group v-model="sequenceType">
+      <el-form-item label="流程类型：" prop="plant">
+        <el-radio-group v-model="form.plant" @change="plantKindChange">
           <!-- works when >=2.6.0, recommended ✔️ not work when <2.6.0 ❌ -->
-          <el-radio :value="1">
+          <el-radio :value="false">
             日常流程
           </el-radio>
           <!-- works when <2.6.0, deprecated act as value when >=3.0.0 -->
-          <el-radio :value="2">
+          <el-radio :value="true">
             计划清洁
           </el-radio>
         </el-radio-group>
@@ -260,9 +310,22 @@ onMounted(() => {
       <el-form-item label="流程名称：" prop="name">
         <el-input v-model="form.name" placeholder="请输入流程名称" />
       </el-form-item>
-      <el-form-item label="流程目的：" prop="name">
+      <el-form-item v-if="form.plant" label="选择计划：" prop="plantList">
+        <el-tree
+          ref="plantTreeRef"
+          style="max-width: 600px"
+          :data="plantList"
+          show-checkbox
+          default-expand-all
+          node-key="id"
+          highlight-current
+          :props="defaultProps"
+          @check="selectedPlant"
+        />
+      </el-form-item>
+      <el-form-item v-if="!form.plant" label="流程目的：" prop="target">
         <div class="max-h-100 overflow-auto w-100%">
-          <targetSelect @selected="selectedTarget" />
+          <targetSelect @selected="getTargetSelect" />
         </div>
       </el-form-item>
       <el-form-item label="楼层：" prop="floor">
@@ -285,7 +348,7 @@ onMounted(() => {
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="流程对象：" prop="objs">
+      <el-form-item v-if="!form.plant" label="流程对象：" prop="objs">
         <div v-if="objstLit.length > 0" class="w-100%">
           <treeView :expand="false" :res-list="objstLit" @selected="getObjectSelected" />
         </div>
@@ -326,12 +389,12 @@ onMounted(() => {
           </el-col>
         </div>
       </el-form-item>
-      <el-form-item label="检查模板：" prop="ins">
+      <el-form-item v-if="!form.plant" label="检查模板：" prop="ins">
         <div>
           <treeView :expand="false" :res-list="inspectionItems" @selected="(value) => form.ins = value" />
         </div>
       </el-form-item>
-      <el-form-item label="工具：">
+      <el-form-item v-if="!form.plant" label="工具：">
         <div class="flex flex-col">
           <div>
             <el-radio-group v-model="form.tools_accuracy" @change="getTools">

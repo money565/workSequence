@@ -141,7 +141,9 @@ async function deleteCosFile(key: string, showMesg = true) {
         删除
       </el-button>
     </div>
-    <el-image v-if="fileUrl" :src="fileUrl" style="width: 8rem;" />
+    <div class="mt-5">
+      <el-image v-if="fileUrl" :src="fileUrl" style="width: 8rem;" />
+    </div>
   </div>
 </template>
 

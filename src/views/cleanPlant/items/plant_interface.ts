@@ -13,4 +13,6 @@ export interface PLANT {
   cycle: number
   ex_date: number
   ins: ITEM[]
+  parent: number
+  state: boolean
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { sequence } from './target'
-import { deactivateSequenceBySid, deleteSequenceBySid, getSequence } from '@/axios/interfaceWorkBase'
+import { deactivateSequenceBySid, deleteSequenceBySid, getSequence, getSequenceObjToolsTarget } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import sequenceCreate from './items/sequenceCreate.vue'
@@ -114,6 +114,15 @@ function deactivateSequence(index: number) {
     })
 }
 
+function getSequenceByPlant(pl_id: number, posit: number, index: number) {
+  getSequenceObjToolsTarget(pl_id, posit).then(({ data: res }) => {
+    currentSequenceList.value[index].objs = res.result.objs
+    currentSequenceList.value[index].target = res.result.target
+    currentSequenceList.value[index].tools = res.result.tools
+    currentSequenceList.value[index].ins = res.result.ins
+  })
+}
+
 onMounted(() => {
   init()
 })
@@ -152,10 +161,17 @@ watch(() => acs.currentProject, () => {
                       流程名称：
                     </el-text>
                   </div>
-                  <div class="w-59 max-h-20 overflow-auto">
-                    <el-text>
-                      {{ item.name }}
-                    </el-text>
+                  <div class="w-59 max-h-20 overflow-auto flex justify-between">
+                    <div class="max-w-59 truncate">
+                      <el-text :type="item.plant ? 'primary' : ''">
+                        {{ item.name }}
+                      </el-text>
+                    </div>
+                    <div v-if="item.plant">
+                      <el-tag type="primary">
+                        计划
+                      </el-tag>
+                    </div>
                   </div>
                 </div>
                 <div class="flex mt-1">
@@ -172,7 +188,7 @@ watch(() => acs.currentProject, () => {
                 </div>
                 <div class="flex mt-1">
                   <div class="w-20">
-                    <el-text type="danger">
+                    <el-text type="primary">
                       位置：
                     </el-text>
                   </div>
@@ -192,6 +208,23 @@ watch(() => acs.currentProject, () => {
                     <el-text>
                       {{ item.start }}至{{ item.end }}
                     </el-text>
+                  </div>
+                </div>
+                <div v-if="item.plant" class="flex mt-1">
+                  <div class="w-20">
+                    <el-text type="info">
+                      计划日期：
+                    </el-text>
+                  </div>
+                  <div>
+                    <el-select v-model="item.currentPlant" placeholder="选择计划" style="width: 140px" size="small" @change="getSequenceByPlant(item.currentPlant!, item.posit.id, index)">
+                      <el-option
+                        v-for="it in item.plantList"
+                        :key="it.id"
+                        :label="it.name"
+                        :value="it.id"
+                      />
+                    </el-select>
                   </div>
                 </div>
                 <div class="flex mt-1">
@@ -225,6 +258,16 @@ watch(() => acs.currentProject, () => {
                   <div class="max-h-50 overflow-auto">
                     <el-tag v-for="(o, i) in item.objs" :key="i" class="m-1">
                       {{ o.name }}
+                    </el-tag>
+                  </div>
+                </div>
+                <div class=" mt-1">
+                  <el-text type="primary">
+                    检查内容：
+                  </el-text>
+                  <div class="max-h-50 overflow-auto">
+                    <el-tag v-for="(ins_item, ins_index) in item.ins" :key="ins_index" class="m-1">
+                      {{ ins_item.name }}
                     </el-tag>
                   </div>
                 </div>

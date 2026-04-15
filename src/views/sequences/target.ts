@@ -27,7 +27,6 @@ export function flattenTree(tree: any[], childrenKey = 'children'): TASK_OPT[] {
 }
 
 export function targetList(params: number[], task_target: TASK_OPT[]) {
-  console.log(params)
   const pan = flattenTree(task_target)
   const temp: TASK_OPT[] = []
   for (const i in params) {
@@ -49,6 +48,12 @@ export function targetList(params: number[], task_target: TASK_OPT[]) {
 export interface sequence {
   id: number
   name: string
+  plant: boolean
+  plantList?: {
+    id: number
+    name: string
+  }[]
+  currentPlant?: number
   floor: {
     id: number
     name: string
@@ -57,6 +62,7 @@ export interface sequence {
     id: number
     name: string
     icon: string
+    result?: boolean
   }[]
   posit: {
     id: number
@@ -66,17 +72,26 @@ export interface sequence {
     id: number
     name: string
     type: string
+    result?: boolean
   }[]
   start: string
   end: string
   start_num: number
   end_num: number
   ins: {
-    choices: string[]
-    items: { id: number, c_type: string }[]
-  }
+    id: number
+    name: string
+    icon: string
+    parent:number | null
+    result?: boolean
+  }[]
   tools_accuracy: boolean
-  tools: { id: number, name: string, sp: string }[]
+  tools: {
+    id: number
+    name: string
+    icon: string
+    result?: boolean
+  }[]
   emp_accuracy: boolean
   emp: { id: number, name: string } []
 }

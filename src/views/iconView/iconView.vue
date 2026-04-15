@@ -12,7 +12,7 @@ interface ICON_OPT {
 const objs_icons = ref<ICON_OPT[]>([])
 const tools_icons = ref<ICON_OPT[]>([])
 const action_icons = ref<ICON_OPT[]>([])
-const ins_icons=ref<ICON_OPT[]>([])
+const ins_icons = ref<ICON_OPT[]>([])
 const createToolsIconDialog = ref(false)
 const createObjsIconDialog = ref(false)
 const createActionIconDialog = ref(false)
@@ -21,7 +21,7 @@ const showBlock = reactive({
   objs: false,
   tools: false,
   action: false,
-  ins:false
+  ins: false,
 })
 const types = reactive({
   name: '',
@@ -47,7 +47,6 @@ function init() {
       if (res.result[i].category === 4) {
         ins_temp.push(res.result[i])
       }
-      
     }
     objs_icons.value = objs_temp
     tools_icons.value = tools_temp
@@ -107,16 +106,16 @@ onMounted(() => {
       <el-collapse-transition>
         <div v-show="showBlock.objs" class="flex flex-wrap gap-2 w-100% overflow-auto">
           <div v-for="(item, index) in objs_icons" :key="index">
-            <el-card class="w-30 h-35 rounded-xl">
+            <el-card class="w-28 h-33 rounded-xl">
               <div class=" flex items-center justify-center">
-                <el-image :src="`https://xcwy-contract-1312050651.cos.ap-chengdu.myqcloud.com/${item.icon}.svg`" style="width: 4rem; height: 4rem;" />
+                <el-image :src="`https://xcwy-contract-1312050651.cos.ap-chengdu.myqcloud.com/${item.icon}.svg`" style="width: 3rem; height: 3rem;" />
               </div>
               <div class=" flex items-center justify-center mt-2">
                 {{ item.name }}
               </div>
             </el-card>
           </div>
-          <el-card class="w-30 h-35 rounded-xl cursor-pointer" @click="types.name = '', types.icon = '', types.category = 1, createObjsIconDialog = true">
+          <el-card class="w-28 h-33 rounded-xl cursor-pointer" @click="types.name = '', types.icon = '', types.category = 1, createObjsIconDialog = true">
             <div class="flex items-center justify-center">
               <el-icon size="35">
                 <svg-icon name="add-green" />

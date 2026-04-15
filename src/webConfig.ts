@@ -16,3 +16,6 @@ export const mapKey: string = 'b267c777e58781119abebbfb61b06ba0' // 申请好的
 export const mapVersion: string = '2.0' // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
 export const SECRET_KEY = 'spotcheck1011123'
 export const SECRET_IV = 'spotcheck1011123'
+export function imageUrl(key: string): string {
+  return `https://xcwy-contract-1312050651.cos.ap-chengdu.myqcloud.com/${key}.svg`
+}

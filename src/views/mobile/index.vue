@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import { useMobileStore } from '@/stores/mobile'
 // ==================== 1. 监听键盘左右方向键 ← → ====================
 import { onMounted, onUnmounted, ref } from 'vue'
-
+import secondTopItem from './secondTopItem/secondTopItem.vue'
 import topItem from './topItem/topItem.vue'
 
 // 监听区域（也可以直接挂 window）
 const swipeRef = ref<HTMLElement | null>(null)
-
+const mss = useMobileStore()
 // 滑动记录
 let startX = 0
 const minDistance = 50 // 最小滑动距离
@@ -19,18 +20,30 @@ function onTouchStart(e: Event) {
 
 // 触摸结束（方向已修正）
 function onTouchEnd(e: Event) {
+  if (mss.checkDialog) {
+    return null
+  }
   const touchEvent = e as TouchEvent
   const endX = touchEvent.changedTouches[0].clientX
   const offset = endX - startX
-
   if (offset > minDistance) {
-    // 手指 右滑 → 代表上一页 / 向左翻
-    console.log('👉 右滑 → 执行【上一页/向左】')
+    if (mss.currentTimeNode > 46) {
+      mss.currentTimeNode = 46
+    }
+    else {
+      mss.currentTimeNode = mss.currentTimeNode + 1
+    }
+    mss.direct = 'right'
     toLeft()
   }
   else if (offset < -minDistance) {
-    // 手指 左滑 → 代表下一页 / 向右翻
-    console.log('👈 左滑 → 执行【下一页/向右】')
+    if (mss.currentTimeNode <= 0) {
+      mss.currentTimeNode = 0
+    }
+    else {
+      mss.currentTimeNode = mss.currentTimeNode - 1
+    }
+    mss.direct = 'left'
     toRight()
   }
 }
@@ -57,6 +70,7 @@ function toRight() {
 
 // 绑定事件
 onMounted(() => {
+  console.log(mss.currentTimeNode)
   const el = swipeRef.value ?? window
   el.addEventListener('touchstart', onTouchStart)
   el.addEventListener('touchend', onTouchEnd)
@@ -74,7 +88,10 @@ onUnmounted(() => {
 <template>
   <div>
     <topItem />
-    <router-view />
+    <secondTopItem />
+    <div class="mt-10">
+      <router-view />
+    </div>
   </div>
 </template>
 
