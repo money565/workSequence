@@ -184,6 +184,16 @@ const routes: RouteRecordRaw[] = [
         name: 'home',
         component: () => import(/* webpackChunkName: "login" */ '../views/mobile/home/homeView.vue'),
       },
+      {
+        path: '/checked',
+        name: 'checked',
+        component: () => import(/* webpackChunkName: "login" */ '../views/mobile/checked/checked.vue'),
+      },
+      {
+        path: '/seqList',
+        name: 'seqList',
+        component: () => import(/* webpackChunkName: "login" */ '../views/mobile/seqList/seqList.vue'),
+      },
     ],
   },
   {

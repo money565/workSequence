@@ -2,7 +2,6 @@
 import { useMobileStore } from '@/stores/mobile'
 // ==================== 1. 监听键盘左右方向键 ← → ====================
 import { onMounted, onUnmounted, ref } from 'vue'
-import secondTopItem from './secondTopItem/secondTopItem.vue'
 import topItem from './topItem/topItem.vue'
 
 // 监听区域（也可以直接挂 window）
@@ -88,10 +87,7 @@ onUnmounted(() => {
 <template>
   <div>
     <topItem />
-    <secondTopItem />
-    <div class="mt-10">
-      <router-view />
-    </div>
+    <router-view />
   </div>
 </template>
 

@@ -49,6 +49,7 @@ export interface sequence {
   id: number
   name: string
   plant: boolean
+  plantId?: number
   plantList?: {
     id: number
     name: string
@@ -82,8 +83,8 @@ export interface sequence {
     id: number
     name: string
     icon: string
-    parent:number | null
-    result?: boolean
+    parent: number | null
+    result?: boolean | null
   }[]
   tools_accuracy: boolean
   tools: {
@@ -94,4 +95,22 @@ export interface sequence {
   }[]
   emp_accuracy: boolean
   emp: { id: number, name: string } []
+  checkPic: string
+  checked?: {
+    checker: {
+      id: number
+      name: string
+    }
+    pic: string
+    unq: {
+      objs: { id: number, name: string }[]
+      tools: { id: number, name: string }[]
+      target: { id: number, name: string }[]
+    }
+    dt: string
+    res: {
+      i: number
+      r: boolean
+    }[]
+  }
 }

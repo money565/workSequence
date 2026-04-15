@@ -80,7 +80,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
     ElMessage.error(`${file.name} 上传失败: ${error.message}`)
   }
 
-  function doUploadFileWithKey(file: File, key: string) {
+  function doUploadFileWithKey(file: File, key: string): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
         if (cosInstance.value) {
@@ -111,7 +111,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
     })
   }
 
-  function removeFile(key: string) {
+  async function removeFile(key: string) {
     return new Promise((reslove, reject) => {
       initCos().then(() => {
         if (cosInstance.value !== null) {

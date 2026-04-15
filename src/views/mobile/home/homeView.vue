@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import type { sequence } from '@/views/sequences/target'
-import { getSequenceByTime } from '@/axios/interfaceWorkBase'
+import { createCheckResult, getSequenceByTime } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
+import { useUserStore } from '@/stores/counter'
 import { useMobileStore } from '@/stores/mobile'
+import upLoadImage from '@/views/public/upLoadImage.vue'
 import { imageUrl } from '@/webConfig'
+import { ElMessageBox } from 'element-plus'
+import secondTopItem from '../secondTopItem/secondTopItem.vue'
 
 const acs = useAppCacheStore()
 const mss = useMobileStore()
+const user = useUserStore()
 const showSequence = ref(false)
 const sequenceList = ref<sequence[]>([])
 const tempDialog = ref(false)
@@ -45,6 +50,76 @@ function objClick(obj_index: number) {
   }
 }
 
+function targetClick(action_index: number) {
+  if (sequenceList.value[checkIndex.value].target[action_index].result === undefined || sequenceList.value[checkIndex.value].target[action_index].result) {
+    sequenceList.value[checkIndex.value].target[action_index].result = false
+  }
+  else {
+    sequenceList.value[checkIndex.value].target[action_index].result = true
+  }
+}
+
+function receivePic(value: string) {
+  sequenceList.value[checkIndex.value].checkPic = value
+}
+
+function upLoadChcekData() {
+  const checkData = sequenceList.value[checkIndex.value]
+  const Unqualified: { objs: number[], tools: number[], target: number[] } = {
+    objs: [],
+    tools: [],
+    target: [],
+  }
+  const result = []
+  for (const i in checkData.objs) {
+    if (checkData.objs[i].result === false) {
+      Unqualified.objs.push(checkData.objs[i].id)
+    }
+  }
+  for (const t in checkData.tools) {
+    if (checkData.tools[t].result === false) {
+      Unqualified.tools.push(checkData.tools[t].id)
+    }
+  }
+  for (const ta in checkData.target) {
+    if (checkData.target[ta].result === false) {
+      Unqualified.target.push(checkData.target[ta].id)
+    }
+  }
+  for (const ins in checkData.ins) {
+    if (checkData.ins[ins].parent !== null) {
+      if ((checkData.ins[ins].result === undefined || checkData.ins[ins].result === null)) {
+        ElMessageBox.alert(`完成${checkData.ins[ins].name}的检查`, '提示', {
+          confirmButtonText: '确定',
+        })
+        return null
+      }
+      result.push({
+        i: checkData.ins[ins].id,
+        r: checkData.ins[ins].result,
+      })
+    }
+  }
+  if (!checkData.checkPic) {
+    ElMessageBox.alert('需要上传图片', '提示', {
+      confirmButtonText: '确定',
+    })
+    return null
+  }
+  const params = {
+    checker: user.userInfo.userid,
+    sid: sequenceList.value[checkIndex.value].id,
+    plant: sequenceList.value[checkIndex.value].plantId,
+    pic: checkData.checkPic,
+    cd: { res: result, unq: Unqualified },
+  }
+  console.log(params)
+  createCheckResult(params).then(() => {
+    init()
+    mss.checkDialog = false
+  })
+}
+
 onMounted(() => {
   init()
 })
@@ -68,7 +143,10 @@ watch(() => mss.currentTimeNode, () => {
 
 <template>
   <div>
-    <div class="w-100% flex items-center justify-center">
+    <div class="fixed top-12">
+      <secondTopItem />
+    </div>
+    <div class="w-100% flex items-center justify-center mt-10">
       <div v-if="sequenceList.length > 0">
         <div v-show="showSequence">
           <div v-for="(item, index) in sequenceList" :key="`${item.name}_${index}`" class="flex w-83 mt-2">
@@ -112,7 +190,7 @@ watch(() => mss.currentTimeNode, () => {
                 </div>
                 <div class="flex mt-1">
                   <div class="w-20">
-                    <el-text type="danger">
+                    <el-text type="primary">
                       时间：
                     </el-text>
                   </div>
@@ -159,9 +237,21 @@ watch(() => mss.currentTimeNode, () => {
               </div>
 
               <template #footer>
-                <el-button type="success" link @click="openCheck(index)">
-                  检查
-                </el-button>
+                <div v-if="item.checked">
+                  该流程在
+                  <el-text type="success" size="large">
+                    {{ item.checked.dt }}
+                  </el-text>
+                  由
+                  <el-text type="primary" size="large">
+                    {{ item.checked.checker.name }}
+                  </el-text>检查
+                </div>
+                <div v-else>
+                  <el-button type="success" @click="openCheck(index)">
+                    检查
+                  </el-button>
+                </div>
               </template>
             </el-card>
           </div>
@@ -178,7 +268,7 @@ watch(() => mss.currentTimeNode, () => {
         </div>
       </div>
     </div>
-    <XtDialog v-model="mss.checkDialog" :title="checkTitle" width="350">
+    <XtDialog v-model="mss.checkDialog" :title="checkTitle" width="350" @cancel="mss.checkDialog = false" @confirm="upLoadChcekData">
       <div>
         <div class="w-full bg-yellow-500 flex items-center text-center justify-center pt-1 pb-1 rounded-md text-light-50 text-4.2">
           基本资料
@@ -229,7 +319,7 @@ watch(() => mss.currentTimeNode, () => {
         </div>
         <div class="flex flex-wrap gap-2 mt-4 max-h-50 overflow-auto">
           <div v-for="(action, action_index) in sequenceList[checkIndex].target" :key="action_index">
-            <el-tag size="large" type="warning">
+            <el-tag size="large" :type="action.result === false ? 'info' : 'warning'" @click="targetClick(action_index)">
               <div class="flex">
                 <el-image :src="imageUrl(action.icon)" style="width:1rem" />
                 <div class="flex items-center text-center justify-center">
@@ -251,7 +341,7 @@ watch(() => mss.currentTimeNode, () => {
                 </el-text>
               </div>
               <div>
-                <el-radio-group v-model="ins.result">
+                <el-radio-group v-model="ins.result!">
                   <el-radio :value="true">
                     是
                   </el-radio>
@@ -261,6 +351,9 @@ watch(() => mss.currentTimeNode, () => {
                 </el-radio-group>
               </div>
             </div>
+          </div>
+          <div>
+            <upLoadImage @pic-key="receivePic" />
           </div>
         </div>
       </div>

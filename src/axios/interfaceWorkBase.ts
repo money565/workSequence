@@ -360,3 +360,20 @@ export function searchManager(config: any) {
     },
   })
 }
+
+export function createCheckResult(config: any) {
+  return requestWorkBase({
+    url: `/createCheckResult`,
+    method: 'post',
+    data: {
+      ...config,
+    },
+  })
+}
+
+export function getCheckResult(year: number, month: number, day: number) {
+  return requestWorkBase({
+    url: `/getCheckResult/${year}/${month}/${day}`,
+    method: 'get',
+  })
+}
