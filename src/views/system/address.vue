@@ -12,7 +12,6 @@ const editFloorDialog = ref(false)
 
 function init() {
   getFloor(acs.currentProject).then(({ data: res }) => {
-    console.log(res)
     floorList.value = (res.result ?? []) as { id: number, name: string }[]
   })
 }

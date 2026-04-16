@@ -18,7 +18,6 @@ const currentPositName = ref<string>('')
 
 function init() {
   getAllPositWithFloor(acs.currentProject).then(({ data: res }) => {
-    console.log(res)
     floorList.value = (res.result ?? []) as positOpt[]
   })
 }

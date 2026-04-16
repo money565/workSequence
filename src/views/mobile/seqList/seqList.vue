@@ -21,7 +21,6 @@ const acs = useAppCacheStore()
 const seqList = ref<FLOOR_DATAS>()
 const today = ref(1)
 function init() {
-  console.log(today.value)
   getSequenceByProject(acs.currentProject, today.value).then(({ data: res }) => {
     seqList.value = res.result
   })

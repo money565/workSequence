@@ -5,6 +5,7 @@ import type { TASK_OPT, TASK_OPT_OBJ_EXT } from '../target'
 import { createSequence, getEmpByProject, getFloor, getInspectionItems, getObjsWithPosit, getPlantTree, getPositWithFloor, getToolsTree } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import treeView from '@/views/public/treeView.vue'
+import { ElMessageBox } from 'element-plus'
 import targetSelect from './targetSelect.vue'
 
 interface formOpt {
@@ -97,7 +98,6 @@ function getObjsList() {
   objstLit.value = []
   if (form.posit !== undefined) {
     getObjsWithPosit(form.posit).then(({ data: res }) => {
-      console.log('对象信息', res)
       objstLit.value = res.result
     })
   }
@@ -132,12 +132,13 @@ async function submitForm(formEl: FormInstance | undefined) {
   await formEl.validate((valid, fields) => {
     if (valid) {
       createSequence(form).then(() => {
-        console.log(form)
         emits('confirm')
       })
     }
     else {
-      console.log('error submit!', fields)
+      ElMessageBox.alert(`上传错误请联系管理员${fields}`, '错误', {
+        confirmButtonText: '确定',
+      })
     }
   })
 }
@@ -276,7 +277,6 @@ function plantKindChange() {
   if (form.plant) {
     getPlantTree().then(({ data: res }) => {
       plantList.value = res.result
-      console.log(plantList.value)
     })
   }
 }

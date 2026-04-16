@@ -6,7 +6,6 @@ import treeViewWithEdit from '../public/treeViewWithEdit.vue'
 const objsList = ref<TASK_OPT[]>([])
 function init() {
   getObjectTypesTree().then(({ data: res }) => {
-    console.log(res)
     objsList.value = res.result
   })
 }

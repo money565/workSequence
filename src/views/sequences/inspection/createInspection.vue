@@ -20,7 +20,6 @@ function onSubmit() {
     name: form.name,
     ins: form.inspection,
   }
-  console.log(param)
   createInspection(param).then(() => {
     emits('confirm')
   })

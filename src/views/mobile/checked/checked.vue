@@ -43,7 +43,6 @@ const currentFloor = ref('')
 const checkList = ref<RECORD>({})
 function init() {
   getCheckResult(acs.currentProject, currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, currentDate.value.getDate()).then(({ data: res }) => {
-    console.log(res.result)
     checkList.value = res.result
   })
 }

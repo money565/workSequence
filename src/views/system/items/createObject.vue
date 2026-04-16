@@ -23,7 +23,6 @@ const form = reactive<formOpt>({
 const iconList = ref<{ id: number, name: string, icon: string }[]>([])
 function init() {
   getObjectsTypes().then(({ data: res }) => {
-    console.log(res)
     const temp = []
     for (const i in res.result) {
       temp.push({

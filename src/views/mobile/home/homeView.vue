@@ -114,7 +114,6 @@ function upLoadChcekData() {
     cd: { res: result, unq: Unqualified },
     tips: sequenceList.value[checkIndex.value].tips,
   }
-  console.log(params)
   createCheckResult(params).then(() => {
     init()
     mss.checkDialog = false

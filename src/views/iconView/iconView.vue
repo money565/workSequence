@@ -56,7 +56,6 @@ function init() {
 }
 
 function upLoadType() {
-  console.log('上传信息', types)
   if (types.name === '') {
     ElMessageBox.alert(`请输入名称`, '缺少信息', {
       type: 'warning',

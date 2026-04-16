@@ -46,7 +46,9 @@ async function compressImage(file: File): Promise<File> {
     return await imageCompression(file, options)
   }
   catch (err) {
-    console.error('压缩失败', err)
+    ElMessageBox.alert(`压缩失败,${err}`, '提示', {
+      confirmButtonText: '确定',
+    })
     return file // 失败 fallback 原图
   }
 }

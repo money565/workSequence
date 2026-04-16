@@ -26,7 +26,6 @@ const createObjectDialog = ref(false)
 
 function init() {
   getAllObjectsWithFloor(acs.currentProject).then(({ data: res }) => {
-    console.log(res)
     objectList.value = (res.result ?? []) as positOpt[]
   })
 }

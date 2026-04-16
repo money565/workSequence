@@ -65,7 +65,6 @@ function onSubmit() {
 onMounted(() => {
   resetTool()
   getToolsTypes().then(({ data: res }) => {
-    console.log(res)
     const temp = []
     for (const i in res.result) {
       temp.push({

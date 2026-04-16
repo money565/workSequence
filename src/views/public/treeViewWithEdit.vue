@@ -98,7 +98,7 @@ function createAction(node: Node) {
       emits('create')
     })
   }
-  if(props.sort === 'ins'){
+  if (props.sort === 'ins') {
     createInspection(param).then(() => {
       emits('create')
     })
@@ -119,7 +119,6 @@ function handleNodeDrop(node: Node, draggingNode: Node) {
       break
     }
   }
-  console.log(node.data.id, ':', node.data.name, 'to', parent)
   const param = {
     node: node.data.id,
     parent,

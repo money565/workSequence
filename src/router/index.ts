@@ -237,7 +237,6 @@ router.beforeEach((to, from, next) => {
     next('/login')
   }
   else if (typeof to.meta.permiss == 'string' && !permiss.key.includes(to.meta.permiss)) {
-    console.log('权限', typeof to.meta.permiss, permiss.key.includes(to.meta.permiss))
     // 如果没有权限，则进入403
     next('/403')
   }

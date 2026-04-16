@@ -69,11 +69,8 @@ function setupInterceptors(instance: AxiosInstance) {
     const user = useUserStore()
     user.loginReady = false
     if (error && error.response && error.response.data && error.response.data.data) {
-      console.log(error)
-      user.logout().then((res) => {
-        console.log('登录错误退出', res)
-        user.login().then((res) => {
-          console.log('重新登录', res)
+      user.logout().then(() => {
+        user.login().then(() => {
           user.loginReady = true
         })
       })
@@ -86,7 +83,6 @@ function setupInterceptors(instance: AxiosInstance) {
   })
 
   instance.interceptors.request.use((config) => {
-    console.log(config.url)
     const user = useUserStore()
     config.headers.Authorization = `Bearer ${user.userInfo.token}`
     config.headers.DDingID = user.userInfo.userid

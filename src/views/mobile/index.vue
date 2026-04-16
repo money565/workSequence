@@ -50,11 +50,9 @@ function onTouchEnd(e: Event) {
 // 键盘方向键（正常逻辑）
 function onKeyDown(e: KeyboardEvent) {
   if (e.key === 'ArrowLeft') {
-    console.log('⌨ ← 左箭头 → 向左')
     toLeft()
   }
   else if (e.key === 'ArrowRight') {
-    console.log('⌨ → 右箭头 → 向右')
     toRight()
   }
 }
@@ -69,7 +67,6 @@ function toRight() {
 
 // 绑定事件
 onMounted(() => {
-  console.log(mss.currentTimeNode)
   const el = swipeRef.value ?? window
   el.addEventListener('touchstart', onTouchStart)
   el.addEventListener('touchend', onTouchEnd)

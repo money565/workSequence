@@ -7,7 +7,6 @@ const emits = defineEmits(['selected'])
 const taskTargets = ref<TASK_OPT[]>([])
 function init() {
   getActionTargetsWithOutTypes().then(({ data: res }) => {
-    console.log(res)
     taskTargets.value = res.result
   })
 }

@@ -52,7 +52,6 @@ function init() {
       }
     }
     sequenceList.value = temp
-    console.log('当前浏览时间', currentTime.value)
     receiveCurrentTimeChange(currentTime.value)
     timeSelectRefresh.value = new Date().getTime()
   })
