@@ -371,9 +371,16 @@ export function createCheckResult(config: any) {
   })
 }
 
-export function getCheckResult(year: number, month: number, day: number) {
+export function getCheckResult(pid: number, year: number, month: number, day: number) {
   return requestWorkBase({
-    url: `/getCheckResult/${year}/${month}/${day}`,
+    url: `/getCheckResult/${pid}/${year}/${month}/${day}`,
+    method: 'get',
+  })
+}
+
+export function getSequenceByProject(pid: number, today: number) {
+  return requestWorkBase({
+    url: `/getSequenceByProject/${pid}/${today}`,
     method: 'get',
   })
 }

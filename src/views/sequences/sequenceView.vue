@@ -156,13 +156,13 @@ watch(() => acs.currentProject, () => {
             <el-card class="rounded-xl w-83">
               <div class="h-100 overflow-auto">
                 <div class="flex mt-1">
-                  <div class="w-20">
+                  <div class="w-22">
                     <el-text type="primary">
                       流程名称：
                     </el-text>
                   </div>
                   <div class="w-59 max-h-20 overflow-auto flex justify-between">
-                    <div class="max-w-59 truncate">
+                    <div class="w-40 truncate">
                       <el-text :type="item.plant ? 'primary' : ''">
                         {{ item.name }}
                       </el-text>

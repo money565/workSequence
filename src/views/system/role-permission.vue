@@ -10,7 +10,7 @@ const props = defineProps({
   },
 })
 
-const menuObj = ref({})
+const menuObj: any = ref({})
 const data = menuData.map((item) => {
   if (item.children) {
     menuObj.value[item.id] = item.children.map(sub => sub.id)
@@ -40,7 +40,7 @@ function getTreeData(data: any[]) {
     return obj
   })
 }
-const data = getTreeData(menuData)
+const datas = getTreeData(menuData)
 function checkData(data: string[]) {
   return data.filter((item) => {
     return !menuObj.value[item] || data.toString().includes(menuObj.value[item].toString())
@@ -63,7 +63,7 @@ function onSubmit() {
     <ElTree
       ref="tree"
       class="mgb10"
-      :data="data"
+      :data="data || datas"
       node-key="id"
       default-expand-all
       show-checkbox

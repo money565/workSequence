@@ -105,7 +105,7 @@ onMounted(() => {
               <div>
                 <el-image style="width: 40px; height: 40px" :src="item.icon" :alt="item.name" />
               </div>
-              <div class="text-3">
+              <div class="text-3 w-99% truncate">
                 {{ item.name }}
               </div>
             </div>

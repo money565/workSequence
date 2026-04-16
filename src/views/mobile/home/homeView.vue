@@ -112,6 +112,7 @@ function upLoadChcekData() {
     plant: sequenceList.value[checkIndex.value].plantId,
     pic: checkData.checkPic,
     cd: { res: result, unq: Unqualified },
+    tips: sequenceList.value[checkIndex.value].tips,
   }
   console.log(params)
   createCheckResult(params).then(() => {
@@ -332,7 +333,7 @@ watch(() => mss.currentTimeNode, () => {
         <div class="w-full bg-blue-500 flex items-center text-center justify-center pt-1 pb-1 rounded-md text-light-50 text-4.2 mt-2">
           检查
         </div>
-        <div class="max-h-50 overflow-auto">
+        <div class="max-h-70 overflow-auto">
           <div v-for="(ins, ins_index) in sequenceList[checkIndex].ins" :key="ins_index">
             <div v-if="ins.parent !== null" class="mt-2 flex gap-4">
               <div class="mt-2">
@@ -354,6 +355,18 @@ watch(() => mss.currentTimeNode, () => {
           </div>
           <div>
             <upLoadImage @pic-key="receivePic" />
+          </div>
+          <div>
+            说明（选填）：
+          </div>
+          <div>
+            <el-input
+              v-model="sequenceList[checkIndex].tips"
+              style="width: 90%"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+              type="textarea"
+              placeholder="请输入检查说明，可以为空"
+            />
           </div>
         </div>
       </div>

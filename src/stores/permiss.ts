@@ -24,11 +24,16 @@ export const usePermissStore = defineStore('permiss', () => {
   const setUser = (username: string) => {
     currentUser.value = username
   }
+
+  function handleSet(keys: string[]) {
+    console.log(keys)
+  }
   return {
     key,
     defaultList,
     hasPermission,
     setUser,
     currentUser,
+    handleSet,
   }
 })

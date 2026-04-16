@@ -96,6 +96,7 @@ export interface sequence {
   emp_accuracy: boolean
   emp: { id: number, name: string } []
   checkPic: string
+  tips: string
   checked?: {
     checker: {
       id: number
@@ -112,5 +113,6 @@ export interface sequence {
       i: number
       r: boolean
     }[]
+    tips: string
   }
 }

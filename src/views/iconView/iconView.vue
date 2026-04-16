@@ -104,7 +104,7 @@ onMounted(() => {
         流程对象类
       </el-divider>
       <el-collapse-transition>
-        <div v-show="showBlock.objs" class="flex flex-wrap gap-2 w-100% overflow-auto">
+        <div v-show="showBlock.objs" class="flex flex-wrap gap-2 w-100% max-h-150 overflow-auto">
           <div v-for="(item, index) in objs_icons" :key="index">
             <el-card class="w-28 h-33 rounded-xl">
               <div class=" flex items-center justify-center">
@@ -134,7 +134,7 @@ onMounted(() => {
           工具类
         </el-divider>
         <el-collapse-transition>
-          <div v-show="showBlock.tools" class="flex flex-wrap gap-2 w-100% overflow-auto">
+          <div v-show="showBlock.tools" class="flex flex-wrap gap-2 w-100% overflow-auto  max-h-150 ">
             <div v-for="(item, index) in tools_icons" :key="index">
               <el-card class="w-30 h-35 rounded-xl">
                 <div class=" flex items-center justify-center">
@@ -165,7 +165,7 @@ onMounted(() => {
           动作类
         </el-divider>
         <el-collapse-transition>
-          <div v-show="showBlock.action" class="flex flex-wrap gap-2 w-100% overflow-auto">
+          <div v-show="showBlock.action" class="flex flex-wrap gap-2 w-100% overflow-auto  max-h-150 ">
             <div v-for="(item, index) in action_icons" :key="index">
               <el-card class="w-30 h-35 rounded-xl">
                 <div class=" flex items-center justify-center">
@@ -196,7 +196,7 @@ onMounted(() => {
           巡场检查类
         </el-divider>
         <el-collapse-transition>
-          <div v-show="showBlock.ins" class="flex flex-wrap gap-2 w-100% overflow-auto">
+          <div v-show="showBlock.ins" class="flex flex-wrap gap-2 w-100% overflow-auto  max-h-150 ">
             <div v-for="(item, index) in ins_icons" :key="index">
               <el-card class="w-30 h-35 rounded-xl">
                 <div class=" flex items-center justify-center">

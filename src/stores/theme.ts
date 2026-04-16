@@ -34,7 +34,7 @@ export const useThemeStore = defineStore('theme', {
         this.setPropertyColor('', type) // 重置主题色
       })
     },
-    setPropertyColor(color: string, type: ThemeColorKey = 'primary') {
+    setPropertyColor(color: any, type: any) {
       (this as any)[type] = color
       setProperty(`--el-color-${type}`, color)
       localStorage.setItem(`theme-${type}`, color)

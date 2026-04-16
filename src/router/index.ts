@@ -205,22 +205,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import(/* webpackChunkName: "login" */ '../views/pages/login.vue'),
   },
   {
-    path: '/register',
-    meta: {
-      title: '注册',
-      noAuth: true,
-    },
-    component: () => import(/* webpackChunkName: "register" */ '../views/pages/register.vue'),
-  },
-  {
-    path: '/reset-pwd',
-    meta: {
-      title: '重置密码',
-      noAuth: true,
-    },
-    component: () => import(/* webpackChunkName: "reset-pwd" */ '../views/pages/reset-pwd.vue'),
-  },
-  {
     path: '/403',
     meta: {
       title: '没有权限',

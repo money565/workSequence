@@ -6,7 +6,7 @@ import { reactive } from 'vue'
 const themeStore = useThemeStore()
 const sidebar = useSidebarStore()
 
-const color = reactive({
+const color: any = reactive({
   primary: localStorage.getItem('theme-primary') || '#409eff',
   success: localStorage.getItem('theme-success') || '#67c23a',
   warning: localStorage.getItem('theme-warning') || '#e6a23c',
@@ -19,7 +19,7 @@ const sidebarColor = reactive({
   bgColor: sidebar.bgColor,
   textColor: sidebar.textColor,
 })
-const themes = [
+const themes: any = [
   {
     name: 'primary',
     color: themeStore.primary || color.primary,
