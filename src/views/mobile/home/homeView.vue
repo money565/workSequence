@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { sequence } from '@/views/sequences/target'
+import scan from '@/assets/icons/scan.svg'
 import { createCheckResult, getSequenceByTime } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import { useUserStore } from '@/stores/counter'
 import { useMobileStore } from '@/stores/mobile'
 import upLoadImage from '@/views/public/upLoadImage.vue'
 import { imageUrl } from '@/webConfig'
+import dd from 'dingtalk-jsapi'
 import { ElMessageBox } from 'element-plus'
 import secondTopItem from '../secondTopItem/secondTopItem.vue'
 
@@ -16,20 +18,31 @@ const showSequence = ref(false)
 const sequenceList = ref<sequence[]>([])
 const tempDialog = ref(false)
 const cleanTime = ref()
-
+const route = useRoute()
 const checkTitle = ref('')
 const checkIndex = ref()
+const currentPosit = ref<number>()
+const positName = ref('')
+const floorName = ref('')
+
 function openCheck(index: number) {
   checkIndex.value = index
   checkTitle.value = `“${sequenceList.value[index].name}”的流程检查`
   mss.checkDialog = true
 }
 function init() {
-  showSequence.value = false
-  getSequenceByTime(acs.currentProject, mss.timeList[mss.currentTimeNode]).then(({ data: res }) => {
-    sequenceList.value = res.result
-    showSequence.value = true
-  })
+  if (currentPosit.value !== undefined) {
+    showSequence.value = false
+    getSequenceByTime(currentPosit.value, mss.timeList[mss.currentTimeNode]).then(({ data: res }) => {
+      sequenceList.value = res.result
+      showSequence.value = true
+      positName.value = res.pos_name
+      floorName.value = res.floor
+      setTimeout(() => {
+        acs.currentProject = res.pid
+      }, 1000)
+    })
+  }
 }
 
 function toolsClick(tool_index: number) {
@@ -120,11 +133,47 @@ function upLoadChcekData() {
   })
 }
 
-onMounted(() => {
-  init()
-})
+function getUrlParams(url: string): Record<string, string> {
+  // 处理空值
+  if (!url)
+    return {}
 
-watch(() => acs.currentProject, () => {
+  // 提取?后面的参数部分
+  const queryString = url.includes('?') ? url.split('?')[1] : url
+  // 原生API解析参数
+  const params = new URLSearchParams(queryString)
+
+  // 转为普通对象
+  const result: Record<string, string> = {}
+  params.forEach((value, key) => {
+    result[key] = value
+  })
+
+  return result
+}
+
+function scanQr() {
+  dd.scan({
+    type: 'qr',
+    source: 'camera',
+    success: (res: { text: any }) => {
+      const { text } = res
+      const param = getUrlParams(text)
+      if ('pid' in param) {
+        currentPosit.value = Number(param.pid)
+        init()
+      }
+    },
+    fail: () => {},
+    complete: () => {},
+  })
+}
+
+onMounted(() => {
+  if (route.query.pid) {
+    acs.currentProject = Number(route.query.pid)
+    currentPosit.value = Number(route.query.pid)
+  }
   init()
 })
 
@@ -142,9 +191,9 @@ watch(() => mss.currentTimeNode, () => {
 </script>
 
 <template>
-  <div>
+  <div v-if="currentPosit !== undefined">
     <div class="fixed top-12">
-      <secondTopItem />
+      <secondTopItem :pos-name="positName" :floor-name="floorName" />
     </div>
     <div class="w-100% flex items-center justify-center mt-10">
       <div v-if="sequenceList.length > 0">
@@ -370,6 +419,9 @@ watch(() => mss.currentTimeNode, () => {
         </div>
       </div>
     </XtDialog>
+  </div>
+  <div v-else>
+    <el-empty description="检查流程请扫位置码" :image="scan" @click="scanQr" />
   </div>
 </template>
 

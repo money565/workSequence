@@ -384,3 +384,10 @@ export function getSequenceByProject(pid: number, today: number) {
     method: 'get',
   })
 }
+
+export function getObjectsByPosit(pos_id: number) {
+  return requestWorkBase({
+    url: `/getObjectsByPosit/${pos_id}`,
+    method: 'get',
+  })
+}

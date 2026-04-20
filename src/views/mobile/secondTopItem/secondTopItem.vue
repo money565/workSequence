@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { useMobileStore } from '@/stores/mobile'
 
+interface IProps {
+  posName: string
+  floorName: string
+}
+const props = defineProps<IProps>()
 const mss = useMobileStore()
 </script>
 
@@ -11,7 +16,7 @@ const mss = useMobileStore()
     </div>
     <div>
       <el-text size="large">
-        当前：{{ mss.currentTime }}
+        {{ props.floorName }}{{ props.posName }}:{{ mss.currentTime }}
       </el-text>
     </div>
     <div class="pr-2">

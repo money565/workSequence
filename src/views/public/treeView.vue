@@ -20,7 +20,7 @@ function selectedTarget() {
 </script>
 
 <template>
-  <div>
+  <div class="w-100%">
     <el-tree
       ref="treeRef"
       :data="props.resList"

@@ -3,6 +3,7 @@ import type { sequence } from './target'
 import { deactivateSequenceBySid, deleteSequenceBySid, getSequence, getSequenceObjToolsTarget } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import editExtTime from './items/editSequence/editExtTime.vue'
 import sequenceCreate from './items/sequenceCreate.vue'
 import timeSelect from './items/timeSelect.vue'
 
@@ -13,6 +14,9 @@ const creatSequenceDialog = ref(false)
 const sequenceList = ref<sequence[]>([])
 const currentSequenceList = ref<sequence[]>([])
 const timeSelectRefresh = ref(0)
+const editDialog = reactive({
+  timeDialog: false,
+})
 function timeToMinutes(timeStr: string): number {
   const [hours, minutes] = timeStr.split(':').map(Number)
   return hours * 60 + minutes
@@ -203,10 +207,11 @@ watch(() => acs.currentProject, () => {
                       时间：
                     </el-text>
                   </div>
-                  <div>
+                  <div class="cursor-pointer" @click="editDialog.timeDialog = true">
                     <el-text>
                       {{ item.start }}至{{ item.end }}
                     </el-text>
+                    <editExtTime :open-dialog="editDialog.timeDialog" :title="`更改${item.name}的时间`" @cancel="editDialog.timeDialog = false" />
                   </div>
                 </div>
                 <div v-if="item.plant" class="flex mt-1">

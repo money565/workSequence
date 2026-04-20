@@ -408,7 +408,7 @@ onMounted(() => {
           </div>
 
           <div>
-            <el-form-item v-if="toolsList.length > 0 && form.tools_accuracy" prop="tools">
+            <el-form-item v-if="toolsList.length > 0 && form.tools_accuracy" prop="tools" class="w-150%">
               <treeView :res-list="toolsList" :expand="false" @selected="(value) => form.tools = value" />
             </el-form-item>
           </div>

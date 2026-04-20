@@ -9,7 +9,7 @@ const swipeRef = ref<HTMLElement | null>(null)
 const mss = useMobileStore()
 // 滑动记录
 let startX = 0
-const minDistance = 50 // 最小滑动距离
+const minDistance = 100 // 最小滑动距离
 
 // 触摸开始
 function onTouchStart(e: Event) {

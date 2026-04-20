@@ -75,7 +75,7 @@ watch(() => acs.currentProject, () => { init() })
           </div>
         </div>
         <div class="rounded-b-xl bg-yellow-50 h-25 pl-10 pt-5 pb-5 pr-5 rounded-b-xl">
-          <div class="flex gap-4">
+          <div class="flex gap-4 flex-wrap">
             <el-tag
               v-for="(p, n) in item.posit"
               :key="n"

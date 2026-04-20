@@ -20,15 +20,15 @@ function handleCommand(command: string) {
   switch (command) {
     case 'check':
       current_router.value = 'check'
-      router.push('home')
+      router.push('/home')
       break
     case 'checked':
       current_router.value = 'checked'
-      router.push('checked')
+      router.push('/checked')
       break
     case 'seqList':
       current_router.value = 'seqList'
-      router.push('seqList')
+      router.push('/seqList')
       break
     case 'logout':
       ElMessage.success('已退出登录')
