@@ -7,7 +7,7 @@ export function HWBaseURL() {
     return 'http://192.168.1.22:5173/#/'
   }
   if (import.meta.env.PROD) {
-    return 'http://124.71.148.182:7008/#/'
+    return 'http://124.71.148.182:7011/#/'
   }
 }
 export const ddingUrl: string = 'api.dingtalk.com'

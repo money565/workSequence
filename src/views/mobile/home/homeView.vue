@@ -197,7 +197,7 @@ watch(() => mss.currentTimeNode, () => {
     </div>
     <div class="w-100% flex items-center justify-center mt-10">
       <div v-if="sequenceList.length > 0">
-        <div v-show="showSequence">
+        <div v-if="showSequence">
           <div v-for="(item, index) in sequenceList" :key="`${item.name}_${index}`" class="flex w-83 mt-2">
             <el-card class="rounded-xl w-83">
               <div class="max-h-100 overflow-auto">
@@ -304,7 +304,22 @@ watch(() => mss.currentTimeNode, () => {
               </template>
             </el-card>
           </div>
+          <div class="w-100% flex items-center justify-center mt-5">
+            <div class="h-50 w-50 border border-solid border-gray-300 rounded-lg shadow-gray-600 text-center" @click="scanQr">
+              <div>
+                <el-icon size="150">
+                  <SvgIcon name="scan" />
+                </el-icon>
+              </div>
+              <div>
+                扫位置码
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+      <div v-else>
+        <el-empty description="当前没有流程，请扫其他位置码" :image="scan" @click="scanQr" />
       </div>
     </div>
     <div v-if="tempDialog">

@@ -391,3 +391,18 @@ export function getObjectsByPosit(pos_id: number) {
     method: 'get',
   })
 }
+
+export function getTodaySequencesByProject(pid: number, year: number, month: number, day: number, page: number, perpage: number) {
+  return requestWorkBase({
+    url: `/getTodaySequencesByProject/${pid}/${year}/${month}/${day}/${page}/${perpage}`,
+    method: 'get',
+  })
+}
+
+export function getStatisticalData(pid: number, year: number, month: number, day: number) {
+  return requestWorkBase({
+    url: `/getStatisticalData/${pid}/${year}/${month}/${day}`,
+    method: 'get',
+  })
+}
+
