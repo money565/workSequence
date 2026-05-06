@@ -151,7 +151,7 @@ const routes: RouteRecordRaw[] = [
           title: '流程管理',
           permiss: '21',
         },
-        component: () => import(/* webpackChunkName: "form" */ '../views/sequences/sequenceView.vue'),
+        component: () => import(/* webpackChunkName: "form" */ '../views/sequences/prewViewSequence.vue'),
       },
       {
         path: '/plant',

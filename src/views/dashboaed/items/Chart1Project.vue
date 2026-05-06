@@ -13,7 +13,8 @@ interface IProps {
 const props = defineProps<IProps>()
 const chartRef = ref<HTMLElement>()
 let chart: echarts.ECharts | null = null
-onMounted(() => {
+
+function init() {
   chart = echarts.init(chartRef.value!)
   chart.setOption({
     backgroundColor: 'transparent',
@@ -54,6 +55,18 @@ onMounted(() => {
       },
     ],
   })
+}
+
+onMounted(() => {
+  init()
+})
+
+onMounted(() => {
+  init()
+})
+
+watch(() => props.project, () => {
+  init()
 })
 
 onUnmounted(() => chart?.dispose())

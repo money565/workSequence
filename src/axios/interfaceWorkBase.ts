@@ -406,3 +406,26 @@ export function getStatisticalData(pid: number, year: number, month: number, day
   })
 }
 
+export function getSequenceByPage(pid: number, page: number, perpage: number) {
+  return requestWorkBase({
+    url: `/getSequenceByPage/${pid}/${page}/${perpage}`,
+    method: 'get',
+  })
+}
+
+export function editSeq(config: any) {
+  return requestWorkBase({
+    url: `/editSeq`,
+    method: 'post',
+    data: {
+      ...config,
+    },
+  })
+}
+
+export function getOtherPositWithPosit(pos_id: number) {
+  return requestWorkBase({
+    url: `/getOtherPositWithPosit/${pos_id}`,
+    method: 'get',
+  })
+}

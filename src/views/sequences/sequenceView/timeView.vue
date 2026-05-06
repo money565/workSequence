@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { sequence } from './target'
+import type { sequence } from '../target'
 import { deactivateSequenceBySid, deleteSequenceBySid, getSequence, getSequenceObjToolsTarget } from '@/axios/interfaceWorkBase'
 import { useAppCacheStore } from '@/stores/appCache'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import editExtTime from './items/editSequence/editExtTime.vue'
-import sequenceCreate from './items/sequenceCreate.vue'
-import timeSelect from './items/timeSelect.vue'
+import editExtTime from '../items/editSequence/editExtTime.vue'
+import sequenceCreate from '../items/sequenceCreate.vue'
+import timeSelect from '../items/timeSelect.vue'
 
 const acs = useAppCacheStore()
 const timeRange = ref([-1, -1])

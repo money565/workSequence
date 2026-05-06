@@ -11,6 +11,7 @@ import Chart6ToolRank from './items/Chart6ToolRank.vue'
 import Chart7QualityRadar from './items/Chart7QualityRadar.vue'
 import Chart8HourTask from './items/Chart8HourTask.vue'
 import Chart9LongProblem from './items/Chart9LongProblem.vue'
+import emptyData from './items/emptyData.vue'
 
 const date = ref(new Date())
 const acs = useAppCacheStore()
@@ -28,7 +29,6 @@ function init() {
     objs_datas.value = res.result[3]
     ins_datas.value = res.result[4]
     checkDate.value = res.result[5]
-    console.log('checkDate.value', checkDate.value)
   })
 }
 
@@ -60,9 +60,21 @@ watch(() => acs.currentProject, () => {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-7xl mx-auto">
       <Chart1Project v-if="project_datas.length > 0" :project="project_datas" />
       <Chart2Floor v-if="floor_datas.length > 0" :floor="floor_datas" />
+      <div v-else>
+        <emptyData title-name="问题最多楼层 TOP6" />
+      </div>
       <Chart3Position v-if="posit_datas.length > 0" :posit="posit_datas" />
+      <div v-else>
+        <emptyData title-name="问题最多位置 TOP6" />
+      </div>
       <Chart4CleanObj v-if="objs_datas.length > 0" :objs="objs_datas" />
+      <div v-else>
+        <emptyData title-name="问题最多对象 TOP6" />
+      </div>
       <Chart9LongProblem v-if="ins_datas.length > 0" :ins="ins_datas" />
+      <div v-else>
+        <emptyData title-name="问题最多检查类型 TOP6" />
+      </div>
       <Chart5DailyLine v-if="checkDate.length > 0" :check-date="checkDate" />
       <Chart6ToolRank />
       <Chart7QualityRadar />

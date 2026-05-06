@@ -5,17 +5,19 @@ import type { TASK_OPT } from '../sequences/target'
 interface IProps {
   resList: TASK_OPT[]
   expand: boolean
+  value?: number[]
 }
 const props = defineProps<IProps>()
 const emits = defineEmits(['selected'])
 const treeRef = ref<InstanceType<typeof ElTree>>()
+const id_list = ref<number[]>([])
 function selectedTarget() {
   const selected = treeRef.value?.getCheckedNodes() || []
-  const id_list = []
+  id_list.value = []
   for (const i in selected) {
-    id_list.push(selected[i].id)
+    id_list.value.push(selected[i].id)
   }
-  emits('selected', id_list)
+  emits('selected', id_list.value)
 }
 </script>
 
@@ -23,10 +25,13 @@ function selectedTarget() {
   <div class="w-100%">
     <el-tree
       ref="treeRef"
+      v-model="id_list"
       :data="props.resList"
       :default-expand-all="props.expand"
       node-key="id"
       :show-checkbox="true"
+      :default-expanded-keys="props.value"
+      :default-checked-keys="props.value"
       @check="selectedTarget"
     >
       <template #default="{ data }">
